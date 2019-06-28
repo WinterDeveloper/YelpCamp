@@ -11,6 +11,25 @@ router.get("/", function(req, res) {
 //AUTH ROUTES
 //===========
 
+router.get('/auth/google', passport.authenticate('google', { scope: ['profile'] }));
+
+router.get('/auth/google/campgrounds',
+  passport.authenticate('google', { failureRedirect: '/login' }),
+  function(req, res) {
+    // Successful authentication, redirect home.
+    res.redirect('/campgrounds');
+});
+
+router.get('/auth/facebook',
+  passport.authenticate('facebook'));
+
+router.get('/auth/facebook/campgrounds',
+  passport.authenticate('facebook', { failureRedirect: '/login' }),
+  function(req, res) {
+    // Successful authentication, redirect home.
+    res.redirect('/campgrounds');
+  });
+
 //show register form
 router.get("/register", function(req, res) {
   res.render("register", {currentUser: req.user});

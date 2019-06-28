@@ -1,16 +1,101 @@
-<%- include("partials/header") -%>
-<h1>sign up</h1>
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>YelpCamp</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+    <link rel="stylesheet" href="/stylesheets/main.css">
+    <link rel="stylesheet" href="/stylesheets/bootstrap-social.css">
+    <link rel="stylesheet" href="/stylesheets/login.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script -->
+  </head>
+  <body>
 
-<form action="/register" method="post">
-  <input type="text" name="username" placeholder="username">
-  <input type="text" name="password" placeholder="password">
-  <button type="submit" name="button">Click Me</button>
-</form>
+  <div class="container-fluid">
+    <nav class="navbar navbar-expand-lg navbar-light">
+
+        <a class="navbar-brand" href="/">YelpCamp</a>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02">
+           <span class="navbar-toggler-icon"></span>
+       </button>
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+
+          <ul class="navbar-nav ml-auto">
+            <% if(!currentUser) { %>
+              <li class="nav-item">
+                <a class="nav-link" href="/login">Login</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/register">Signup</a>
+              </li>
+            <%} else {%>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Hello! <%=currentUser.username%></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/logout">Log Out</a>
+              </li>
+            <%}%>
+          </ul>
+
+        </div>
+
+    </nav>
+    </div>
 
 
+    <div class="container">
+      <% if(error && error.length > 0) { %>
+        <div class="alert alert-danger" role="alert">
+          <%= error %>
+        </div>
+      <% } %>
+      <% if(success && success.length > 0){%>
+        <div class="alert alert-success" role="alert">
+          <%= success %>
+        </div>
+      <% } %>
+    </div>
 
 
+  <div class="container">
+    <h1>Sign Up With</h1>
+      <div class="row">
+      <div class="col col-sm-3">
+        <div class="card-body">
+          <a class="btn btn-block btn-google" href="/auth/google" role="button">
+            <i class="fab fa-google">
+              Sign in with google
+            </i>
+          </a>
+        </div>
+        <div class="card-body">
+          <a class="btn btn-block btn-facebook" href="/auth/facebook" role="button">
+            <i class="fab fa-facebook">
+              Sign in with facebook
+            </i>
+          </a>
+        </div>
+      </div>
+        <div class="col col-sm-3">
+          <form action="/register" method="post">
+            <div class="form-group">
+              <input class="form-control" type="text" name="username" placeholder="username">
+            </div>
+            <div class="form-group">
+              <input class="form-control" type="password" name="password" placeholder="password">
+            </div>
+            <div class="form-group">
+              <button class="btn btn-block btn-outline-dark" type="submit" name="button">submit</button>
+            </div>
+          </form>
+        </div>
+      </div>
+  </div>
 
 
-
-<%- include("partials/footer") -%>
+</body>
+</html>
