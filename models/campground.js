@@ -1,6 +1,7 @@
 //schema setup
 var mongoose = require("mongoose");
 var Comment = require("./comment");
+
 var campgroundSchema = new mongoose.Schema({
   name: String,
   price: String,

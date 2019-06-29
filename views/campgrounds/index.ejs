@@ -11,11 +11,17 @@
       <form action="/campgrounds" method="GET" class="form-inline">
         <div class="form-group">
           <input type="text" name="search" placeholder="campgrounds search..." class="form-control">
-          <input type="submit" value="Search" class="btn btn-outline-dark">
+          <input type="submit" class="btn btn-outline-dark">
         </div>
       </form>
     </p>
   </header>
+
+  <div>
+      <% if(noMatch.length !== 0) { %>
+        <h3><%= noMatch %></h3>
+      <% } %>
+  </div>
 
   <div class="row">
     <%campgrounds.forEach(function(campground) {%>

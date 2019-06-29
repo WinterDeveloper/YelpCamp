@@ -65,6 +65,7 @@ mongoose.connect("mongodb://localhost:27017/yelp_campDB", { useNewUrlParser: tru
 
 
 app.use(bodyParser.urlencoded({extended: true}));
+mongoose.set('useCreateIndex', true)
 
 app.set("view engine", "ejs");
 
