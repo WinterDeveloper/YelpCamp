@@ -11,7 +11,6 @@ var Campground = require("./models/campground");
 var Comment = require("./models/comment");
 var User = require("./models/user");
 var GoogleStrategy = require('passport-google-oauth20').Strategy;
-var FacebookStrategy = require("passport-facebook").Strategy;
 
 
 //require routes
@@ -24,8 +23,8 @@ var commentRoutes = require("./routes/comments"),
 app.use(express.static(__dirname + "/public"));
 app.use(methodOverride("_method"));
 app.use(flash());
-//seed the database
-// seedDB();
+
+app.locals.moment = require("moment");
 
 //PASSPORT CONFIGURATION
 app.use(require("express-session")({
@@ -60,19 +59,6 @@ passport.use(new GoogleStrategy({
     });
   }
 ));
-
-passport.use(new FacebookStrategy({
-    clientID: process.env.FACEBOOK_APP_ID,
-    clientSecret: process.env.FACEBOOK_APP_SECRET,
-    callbackURL: "http://localhost:3000/auth/facebook/campgrounds"
-  },
-  function(accessToken, refreshToken, profile, cb) {
-    User.findOrCreate({ facebookId: profile.id }, function (err, user) {
-      return cb(err, user);
-    });
-  }
-));
-
 
 
 mongoose.connect("mongodb://localhost:27017/yelp_campDB", { useNewUrlParser: true });

@@ -5,7 +5,8 @@ var findOrCreate = require("mongoose-findorcreate");
 var UserSchema = new mongoose.Schema({
   username: String,
   password: String,
-  googleId: String
+  googleId: String,
+  isAdmin: {type: Boolean, default: false}
 });
 
 UserSchema.plugin(passportLocalMongoose);
