@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>YelpCamp</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/stylesheets/main.css">
+    <link rel="stylesheet" href="/stylesheets/profile.css">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script
   </head>
@@ -57,3 +57,39 @@
         </div>
       <% } %>
     </div>
+
+
+<div class="container">
+  <div class="card mb-3 profile-parent" style="max-width: 540px;">
+  <div class="row no-gutters profile-body">
+    <div class="col-md-4">
+      <img src="<%= user.avatar %>" class="card-img" alt="user profile image">
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h5 class="card-title"><%= user.firstName + " " + user.lastName %></h5>
+        <p class="card-text">This is a wider card with supporting text below as a natural     lead-in to additional content. This content is a little bit longer.</p>
+        <a href="mailto: <%= user.email %>"><%= user.email %></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h2 style="text-align: center;"><%= user.username %> 's campgrounds</h2>
+<div class="row">
+  <% campgrounds.forEach(function(campground) { %>
+    <div class="col-md-3 col-sm-6">
+      <div class="card h-100">
+        <img class="img-fluid card-img-top" src="<%= campground.image %>">
+        <div class="card-body">
+          <h4 class="card-title"><%= campground.name %></h4>
+          <p>
+            <a href="/campgrounds/<%= campground._id %>" class="btn btn-outline-dark">More Info</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  <% }); %>
+</div>
+
+<%- include("../partials/footer") -%>

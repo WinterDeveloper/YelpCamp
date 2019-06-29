@@ -4,10 +4,6 @@ var Campground = require("../models/campground");
 var middleware = require("../middleware/index");
 
 
-
-
-
-
 router.get("/campgrounds", function(req, res) {
   //get all  campgrounds from db
   // console.log(req.user);
@@ -53,7 +49,6 @@ router.get("/campgrounds/:id", function(req, res) {
   Campground.findById(req.params.id).populate("comments").exec(function(err, foundCampground) {
     if(!err) {
       if(foundCampground) {
-        console.log(foundCampground);
         res.render("campgrounds/show", {campground: foundCampground, currentUser: req.user});
       }
     } else {
