@@ -5,7 +5,7 @@
     <h1>WELCOME TO YELPCAMP!</h1>
     <p>View Our hand-picked Campgrounds all over the world</p>
     <p>
-      <a class="btn btn-primary btn-lg" href="/campgrounds/new">Add New Campgrounds</a>
+      <a class="btn btn-outline-dark btn-lg" href="/campgrounds/new">Add New Campgrounds</a>
     </p>
     <p>
       <form action="/campgrounds" method="GET" class="form-inline">
@@ -25,11 +25,11 @@
 
   <div class="row">
     <%campgrounds.forEach(function(campground) {%>
-    <div class="col-md-3 col-sm-6">
-      <div class="card h-100">
+    <div class="col-md-4 col-sm-6">
+      <div class="card mb-4" style="text-align: center;">
         <img class="img-fluid card-img-top" src="<%= campground.image %>">
         <div class="card-body">
-          <h4 class="card-title"><%= campground.name %></h4>
+          <h5 class="card-title"><%= campground.name %></h5>
           <p>
             <a href="/campgrounds/<%= campground._id %>" class="btn btn-outline-dark">More Info</a>
           </p>

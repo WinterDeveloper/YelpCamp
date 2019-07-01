@@ -63,7 +63,7 @@
   <div class="card mb-3 profile-parent" style="max-width: 540px;">
   <div class="row no-gutters profile-body">
     <div class="col-md-4">
-      <img src="<%= user.avatar %>" class="card-img" alt="user profile image">
+      <img src="<%= user.avatar%>" class="card-img" alt="user profile image">
     </div>
     <div class="col-md-8">
       <div class="card-body">
@@ -76,9 +76,11 @@
 </div>
 
 <h2 style="text-align: center;"><%= user.username %> 's campgrounds</h2>
+
+
 <div class="row">
   <% campgrounds.forEach(function(campground) { %>
-    <div class="col-md-3 col-sm-6">
+    <div class="col-md-4 col-sm-6">
       <div class="card h-100">
         <img class="img-fluid card-img-top" src="<%= campground.image %>">
         <div class="card-body">
