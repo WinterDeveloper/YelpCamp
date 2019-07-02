@@ -9,14 +9,16 @@ var LocalStrategy = require("passport-local");
 var methodOverride = require("method-override");
 var Campground = require("./models/campground");
 var Comment = require("./models/comment");
+// var Review = require("./models/review");
 var User = require("./models/user");
 var GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 
 //require routes
-var commentRoutes = require("./routes/comments"),
+var commentRoutes    = require("./routes/comments"),
+    reviewRoutes     = require("./routes/review"),
     campgroundRoutes = require("./routes/campgrounds"),
-    indexRoutes = require("./routes/index");
+    indexRoutes      = require("./routes/index");
 
 
 
@@ -79,7 +81,7 @@ app.use(function(req, res, next) {
 app.use(commentRoutes);
 app.use(campgroundRoutes);
 app.use(indexRoutes);
-
+app.use(reviewRoutes);
 
 
 app.listen(3000, function() {

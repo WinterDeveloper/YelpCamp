@@ -27,11 +27,25 @@
     <%campgrounds.forEach(function(campground) {%>
     <div class="col-md-4 col-sm-6">
       <div class="card mb-4" style="text-align: center;">
-        <img class="img-fluid card-img-top" src="<%= campground.image %>">
+        <img class="img-fluid card-img-top" src="<%= campground.images[0].url %>">
         <div class="card-body">
           <h5 class="card-title"><%= campground.name %></h5>
+          <% if (campground.rating === 0) { %>
+              <em>No reviews yet.</em>
+          <% } else { %>
+              <span class="stars-active" style="width:0%">
+                <% for(var i = 0;i < campground.rating;i++) { %>
+                  <i class="fa fa-star stars" aria-hidden="true"></i>
+                <% } %>
+              </span>
+              <span class="stars-inactive" style="width:0%">
+                <% for(var i = 0;i < 5 - campground.rating;i++) { %>
+                  <i class="fa fa-star-o stars" aria-hidden="true"></i>
+                <% } %>
+              </span>
+          <% } %>
           <p>
-            <a href="/campgrounds/<%= campground._id %>" class="btn btn-outline-dark">More Info</a>
+            <a href="/campgrounds/<%= campground._id %>" class="btn btn-outline-dark btn-moreinfo">More Info</a>
           </p>
         </div>
       </div>

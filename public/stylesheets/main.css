@@ -16,3 +16,14 @@ body {
     height: 20vw;
     object-fit: cover;
 }
+
+.stars {
+	color: #EEBD01;
+}
+
+.btn-moreinfo {
+	margin-top: 10px;
+}
+.card {
+	margin-bottom: 20px;
+}

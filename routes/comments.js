@@ -6,6 +6,8 @@ var middleware = require("../middleware/index");
 //=================
 //COMMENTS ROUTE
 //=================
+
+//comments index
 router.get("/campgrounds/:id/comments/new", middleware.isLoggedIn, function(req, res) {
   Campground.findById(req.params.id, function(err, foundCampground) {
     if(err) {
