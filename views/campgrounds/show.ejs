@@ -12,7 +12,16 @@
     </div>
     <div class="col-md-9">
       <div class="card">
-        <img class="img-fluid card-img-top" src="<%= campground.images[0].url %>">
+        <div class="card-columns">
+          <% campground.images.forEach(function(image) { %>
+            <div class="card">
+              <img class="img-fluid card-img-top" src="<%= image.url %>">
+            </div>
+          <% }); %>
+        </div>
+      </div>
+      <!-- <img class="img-fluid card-img-top" src="<%= campground.images[0].url %>"> -->
+      <div class="card">
         <div class="card-body">
           <h4 class="text-right float-right">$<%= campground.price %>/night</h4>
           <h4 class="card-title text-left"><a href="#"><%= campground.name %></a></h4>

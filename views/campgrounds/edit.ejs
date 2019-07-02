@@ -6,7 +6,7 @@
   <div class="row">
 
     <div style="width: 30%;margin:25px auto;">
-      <form action="/campgrounds/<%= campground._id %>?_method=PUT" method="post" enctype="multipart/form-data">
+      <form action="/campgrounds/<%= campground._id %>?_method=PUT" method="post" enctype="multipart/form-data" id="postEditForm">
         <div class="form-group">
           <input class="form-control" type="text" name="campground[name]" value="<%=campground.name%>">
         </div>
@@ -15,7 +15,12 @@
         </div>
         <div class="form-group">
           <label for="image">Image</label>
-          <input type="file" multiple="true" id="image" name="image" accept="image/*">
+          <input type="file" multiple="true" id="imageUpload" name="image" accept="image/*">
+          <% campground.images.forEach(function(image, i) { %>
+            <img src="<%= image.url %>" width="50px">
+            <label for="image<%=i%>">Delete?</label>
+            <input type="checkbox" name="deleteImages[]" class="imageDeleteCheckbox" id="image<%=i%>" value="<%=image.public_id%>">
+          <% }); %>
         </div>
         <div class="form-group">
           <input class="form-control" type="text" name="campground[description]" value="<%=campground.description%>">
@@ -28,6 +33,29 @@
     </div>
   </div>
 </div>
+
+
+<script type="text/javascript">
+  //find edit form
+  let postEditForm = document.getElementById('postEditForm');
+  postEditForm.addEventListener('submit', function(event) {
+    //find length of uploaded images
+    let imageUploads = document.getElementById('imageUpload').files.length;
+    //find all existing images
+    let existingImgs = document.querySelectorAll('.imageDeleteCheckbox').length;
+    //find total number of potential deletions
+    let imgDeletions = document.querySelectorAll('.imageDeleteCheckbox:checked').length;
+    //figure out if the form can be submitted
+    let newTotal = existingImgs - imgDeletions + imageUploads;
+    // debugger
+    if(newTotal > 9) {
+      event.preventDefault();
+      alert('you need to remove al least ' + (newTotal - 9) + ' images');
+    } else {
+
+    }
+  });
+</script>
 
 
 
