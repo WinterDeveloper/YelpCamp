@@ -63,7 +63,7 @@ passport.use(new GoogleStrategy({
 ));
 
 
-mongoose.connect("mongodb://localhost:27017/yelp_campDB", { useNewUrlParser: true });
+mongoose.connect("mongodb://localhost:27017/yelp_campDB-mapbox", { useNewUrlParser: true });
 
 
 app.use(bodyParser.urlencoded({extended: true}));

@@ -50,18 +50,18 @@ router.post("/campgrounds/:id/reviews", middleware.isLoggedIn, middleware.checkR
 				req.flash("error", err.message);
             	return res.redirect("back");
 			}
-			createdReview.author.id = req.user._id;
-      createdReview.author.username = req.user.username;
-      createdReview.campground = foundCampground;
-      createdReview.save();
-      foundCampground.reviews.push(createdReview);
-      //calculate campground rating
-      // console.log(foundCampground.reviews[0].rating);
-      foundCampground.rating = calculateAverage(foundCampground.reviews);
-      foundCampground.save();
-      //flash message
-      req.flash("success", "Successfully added a review");
-      res.redirect("/campgrounds/" + foundCampground._id);
+		    createdReview.author.id = req.user._id;
+            createdReview.author.username = req.user.username;
+            createdReview.campground = foundCampground;
+            createdReview.save();
+            foundCampground.reviews.push(createdReview);
+            //calculate campground rating
+            // console.log(foundCampground.reviews[0].rating);
+            foundCampground.rating = calculateAverage(foundCampground.reviews);
+            foundCampground.save();
+            //flash message
+            req.flash("success", "Successfully added a review");
+            res.redirect("/campgrounds/" + foundCampground._id);
 		});
 	});
 });

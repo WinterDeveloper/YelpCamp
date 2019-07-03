@@ -1,4 +1,113 @@
-<%- include("../partials/header") -%>
+<!-- <%- include("../partials/header") -%> -->
+
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>YelpCamp</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.css' rel='stylesheet' />
+    <link rel="stylesheet" href="/stylesheets/main.css">
+    <style>
+      /*body {
+        margin: 0;
+        padding: 0;
+      }
+
+      #map {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+      }*/
+      .marker {
+        background-image: url('/images/mapbox-icon.png');
+        background-size: cover;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+
+      .mapboxgl-popup {
+        max-width: 200px;
+      }
+
+      .mapboxgl-popup-content {
+        text-align: center;
+        font-family: 'Open Sans', sans-serif;
+      }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script
+
+
+  </head>
+  <body>
+  <div class="container">
+    <nav class="navbar navbar-expand-lg navbar-light">
+
+        <a class="navbar-brand" href="/">YelpCamp</a>
+         <a class="nav-link" href="/campgrounds">Home <span class="sr-only">(current)</span></a>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"> 
+           <span class="navbar-toggler-icon"></span>
+       </button>
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+
+          <ul class="navbar-nav ml-auto">
+            <% if(!currentUser) { %>
+              <li class="nav-item">
+                <a class="nav-link" href="/login">Login</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/register">Signup</a>
+              </li>
+            <%} else {%>
+              <li class="nav-item">
+                <a class="nav-link" href="/users/<%=currentUser._id%>">Hello! <%=currentUser.username%></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/logout">Log Out</a>
+              </li>
+            <%}%>
+          </ul>
+
+        </div>
+
+    </nav>
+
+   </div> 
+
+
+    </nav>
+
+    <div class="container">
+      <% if(error && error.length > 0) { %>
+        <div class="alert alert-danger" role="alert">
+          <%= error %>
+        </div>
+      <% } %>
+      <% if(success && success.length > 0){%>
+        <div class="alert alert-success" role="alert">
+          <%= success %>
+        </div>
+      <% } %>
+    </div>
+
+
+
+
+
+
+
+
+
+
 <div class="container">
   <div class="row">
     <div class="col-md-3">
@@ -8,7 +117,9 @@
         <li class="list-group-item">Info 2</li>
         <li class="list-group-item">Info 3</li>
       </div>
-      <div id="map"></div>
+      <div id="map" style="margin-top: 20px;">
+        
+      </div>
     </div>
     <div class="col-md-9">
       <div class="card">
@@ -90,13 +201,16 @@
                 </div>
             </div>
 
+      <!-- //COMMENT PART -->
       <div class="card">
         <div class="card-body">
+          <p><h4>Latest comments for this campground:</h4></p>
+          <hr>
           <% campground.comments.forEach(function(comment) {%>
             <div class="row">
               <div class="col-md-12">
                 Comment by : <strong><%= comment.author.username %></strong>
-                <span class="float-right"><%= moment(campground.createdAt).fromNow() %></span>
+                <span class="float-right"><%= moment(comment.createdAt).fromNow() %></span>
                 <p>
                   <%= comment.text %>
                 </p>
@@ -119,5 +233,38 @@
     </div>
   </div>
 </div>
+
+
+<script>
+
+var campground = <%- JSON.stringify(campground) %>
+
+mapboxgl.accessToken = 'pk.eyJ1IjoieWxkMTk5NiIsImEiOiJjanhtaDF6bnMwM3N6M25saXlkeTljNDlpIn0.Qq-DvJT26P1TcR8pqNaeLA';
+
+var map = new mapboxgl.Map({
+  container: 'map',
+  style: 'mapbox://styles/mapbox/dark-v10',
+  center: campground.coordinates,
+  zoom: 3
+});
+
+
+
+// add markers to map
+// geojson.features.forEach(function(marker) {
+
+  // create a HTML element for our campground feature
+  var el = document.createElement('div');
+  el.className = 'marker';
+
+//make marker to our location and add it to our map
+  new mapboxgl.Marker(el)
+  .setLngLat(campground.coordinates)
+  .setPopup(new mapboxgl.Popup({ offset: 25 }) // add popups
+  .setHTML('<h3>' + campground.name + '</h3><p>' + campground.location + '</p>'))
+  .addTo(map);
+// });
+
+</script>
 
 <%- include("../partials/footer") -%>

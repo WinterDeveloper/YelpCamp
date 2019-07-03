@@ -10,8 +10,9 @@ var campgroundSchema = new mongoose.Schema({
   // imageId: String,
   description: String,
   location: String,
-  lat: Number,
-  lng: Number,
+  coordinates: Array,
+  // lat: Number,
+  // lng: Number,
   createdAt: { type: Date, default: Date.now },
   author: {
     id: {
