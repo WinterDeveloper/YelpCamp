@@ -11,7 +11,9 @@ var Campground = require("./models/campground");
 var Comment = require("./models/comment");
 // var Review = require("./models/review");
 var User = require("./models/user");
+const seed = require('./seeds');
 var GoogleStrategy = require('passport-google-oauth20').Strategy;
+seed();
 
 
 //require routes

@@ -43,13 +43,30 @@ router.get("/campgrounds", function(req, res) {
         }
     }); 
   } else {
-      Campground.find(function(err, allCampgrounds) {
-      if(err) {
-        console.log(err);
-      } else {
-        res.render("campgrounds/index", {campgrounds: allCampgrounds, currentUser: req.user, noMatch: noMatch});
-      }
-    });
+      // Campground.find(function(err, allCampgrounds) {
+      // if(err) {
+      //   console.log(err);
+      // } else {
+      //   res.render("campgrounds/index", {campgrounds: allCampgrounds, currentUser: req.user, noMatch: noMatch});
+      // }
+    // });
+            Campground.paginate({}, {
+              page: req.query.page || 1,
+              limit: 9,
+            }, function(err, result) {
+              res.render("campgrounds/index", {campgrounds: result, currentUser: req.user, noMatch: noMatch});
+              console.log(result);
+  // result.docs
+  // result.totalDocs = 100
+  // result.limit = 10
+  // result.page = 1
+  // result.totalPages = 10    
+  // result.hasNextPage = true
+  // result.nextPage = 2
+  // result.hasPrevPage = false
+  // result.prevPage = null
+  // result.pagingCounter = 1
+            });
   }
   
 });

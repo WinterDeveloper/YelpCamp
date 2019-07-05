@@ -36,7 +36,6 @@ router.get("/campgrounds/:id/reviews/new", middleware.isLoggedIn, middleware.che
 
 //reviews create: post req
 router.post("/campgrounds/:id/reviews", middleware.isLoggedIn, middleware.checkReviewExistence, function(req, res) {
-  console.log(req.body.review);
 	Campground.findById(req.params.id).populate("reviews").exec(function (err, foundCampground) {
 		if(err) {
 			req.flash("error", err.message);

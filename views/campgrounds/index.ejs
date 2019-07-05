@@ -24,10 +24,11 @@
   </div>
 
   <div class="row">
-    <%campgrounds.forEach(function(campground) {%>
+    <%campgrounds.docs.forEach(function(campground) {%>
     <div class="col-md-4 col-sm-6">
       <div class="card mb-4" style="text-align: center;">
         <img class="img-fluid card-img-top" src="<%= campground.images[0].url %>">
+
         <div class="card-body">
           <h5 class="card-title"><%= campground.name %></h5>
           <% if (campground.rating === 0) { %>
@@ -52,7 +53,38 @@
     </div>
   <%});%>
 
+  </div>
+
+<div class="container">
+
+  <nav aria-label="Page navigation example">
+  <ul class="pagination justify-content-center">
+    <% if(campgrounds.totalDocs > 0) { %>
+      <% if(campgrounds.page - 1) { %>
+      <li class="page-item">
+        <a class="page-link" href="/campgrounds?page=<%= campgrounds.page - 1 %>" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      <% } %>
+      <% for(let i = 1;i <= campgrounds.totalPages;i++) { %>
+        <li class="page-item"><a class="page-link" href="/campgrounds?page=<%= i %>"><%= i %></a></li>
+      <% } %>
+      <% if(campgrounds.page < campgrounds.totalPages) { %>
+      <li class="page-item">
+        <a class="page-link" href="/campgrounds?page=<%= campgrounds.page + 1 %>" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+      <% } %>
+    <% } %>
+    
+  </ul>
+  
+</nav>
 </div>
+
+
 
 
 <%- include("../partials/footer") -%>

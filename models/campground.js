@@ -1,5 +1,6 @@
 //schema setup
 var mongoose = require("mongoose");
+const mongoosePaginate = require('mongoose-paginate-v2');
 var Comment = require("./comment");
 var Review = require("./review");
 
@@ -38,5 +39,7 @@ var campgroundSchema = new mongoose.Schema({
     default: 0
   }
 });
+
+campgroundSchema.plugin(mongoosePaginate);
 
 module.exports = mongoose.model("Campground", campgroundSchema);
