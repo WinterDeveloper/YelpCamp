@@ -169,12 +169,12 @@
                     <hr style="margin-top: 0;">
                     <% campground.reviews.slice(0, 5).forEach(function(review){ %>
                     <div class="row">
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <%- '<span class="fa fa-star stars"></span>'.repeat(review.rating) %>
-                            <div>Review by: <strong><a href="/users/<%= review.author.id %>"><em><%= review.author.username %></em></a></strong></div>
-                            <span><em><%= review.updatedAt.toDateString() %></em></span>
+                            <div><img style="width: 25%; clip-path: circle();" src="<%= review.author.avatar %>">Review by: <strong><a href="/users/<%= review.author.id %>"><em><%= review.author.username %></em></a></strong></div>
+                            <span style="margin-left: 25%;"><em><%= review.updatedAt.toDateString() %></em></span>
                         </div>
-                        <div class="col-md-9">
+                        <div class="col-md-8">
                             <p style="text-align: justify; word-wrap: break-word;">
                                 <%= review.text %>
                             </p>
@@ -209,13 +209,13 @@
           <% campground.comments.slice(0, 5).forEach(function(comment) {%>
             <div class="row">
               <div class="col-md-12">
-                Comment by : <strong><%= comment.author.username %></strong>
+                <img style="width: 8%;clip-path: circle();" src="<%= comment.author.avatar %>">Comment by : <strong><a href="/users/<%= comment.author.id %>"><%= comment.author.username %></a></strong>
                 <span class="float-right"><%= moment(comment.createdAt).fromNow() %></span>
-                <p>
+                <p style="margin-left: 8%">
                   <%= comment.text %>
                 </p>
                 <%if((currentUser && comment.author.id.equals(currentUser._id)) || (currentUser && currentUser.isAdmin)){%>
-                <a class="btn btn-sm btn-warning" href="/campgrounds/<%= campground._id %>/comments/<%=comment._id%>/edit">Edit</a>
+                <a class="btn btn-sm btn-warning" href="/campgrounds/<%= campground._id %>/comments/<%=comment._id%>/edit" style="margin-left: 8%">Edit</a>
                 <form class="delete-form" action="/campgrounds/<%= campground._id %>/comments/<%=comment._id%>?_method=DELETE" method="post">
                   <input type="submit" class="btn btn-sm btn-danger" value="delete">
                 </form>

@@ -52,6 +52,7 @@ router.post("/campgrounds/:id/reviews", middleware.isLoggedIn, middleware.checkR
 		    createdReview.author.id = req.user._id;
             createdReview.author.username = req.user.username;
             createdReview.campground = foundCampground;
+            createdReview.author.avatar = req.user.avatar;
             createdReview.save();
             foundCampground.reviews.push(createdReview);
             //calculate campground rating
