@@ -18,6 +18,22 @@ router.get("/campgrounds/:id/comments/new", middleware.isLoggedIn, function(req,
   });
 });
 
+
+//all comments for one campground
+router.get("/campgrounds/:id/comments", function(req, res) {
+  Campground.findById(req.params.id).populate({
+    path: "comments",
+    options: {sort: {createdAt: -1}}
+  }
+    ).exec(function(err, foundCampground) {
+    if(err) {
+      console.log(err);
+    } else {
+      res.render("comments/index", {campground: foundCampground, currentUser: req.user});
+    }
+  });
+});
+
 router.post("/campgrounds/:id/comments", middleware.isLoggedIn, function(req, res) {
   //lookup campground using //
   Campground.findById(req.params.id, function(err, foundCampground) {

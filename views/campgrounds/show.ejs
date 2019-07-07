@@ -131,7 +131,6 @@
           <% }); %>
         </div>
       </div>
-      <!-- <img class="img-fluid card-img-top" src="<%= campground.images[0].url %>"> -->
       <div class="card">
         <div class="card-body">
           <h4 class="text-right float-right">$<%= campground.price %>/night</h4>
@@ -172,7 +171,7 @@
                     <div class="row">
                         <div class="col-md-3">
                             <%- '<span class="fa fa-star stars"></span>'.repeat(review.rating) %>
-                            <div>Review by: <strong><%= review.author.username %></strong></div>
+                            <div>Review by: <strong><a href="/users/<%= review.author.id %>"><em><%= review.author.username %></em></a></strong></div>
                             <span><em><%= review.updatedAt.toDateString() %></em></span>
                         </div>
                         <div class="col-md-9">
@@ -204,9 +203,10 @@
       <!-- //COMMENT PART -->
       <div class="card">
         <div class="card-body">
-          <p><h4>Latest comments for this campground:</h4></p>
+          <p><h4>Latest comments for this campground:</h4><em>(total comments : <%= campground.comments.length %>)</em></p>
           <hr>
-          <% campground.comments.forEach(function(comment) {%>
+          <!-- campground.reviews.slice(0, 5).forEach(function(review) -->
+          <% campground.comments.slice(0, 5).forEach(function(comment) {%>
             <div class="row">
               <div class="col-md-12">
                 Comment by : <strong><%= comment.author.username %></strong>
@@ -224,6 +224,9 @@
             </div>
             <hr>
           <%})%>
+          <div style="margin-bottom: 10px;">
+              <h4><a href="/campgrounds/<%= campground._id %>/comments"><i class="fa fa-search" aria-hidden="true"></i> See all comments</a></h4>
+          </div>
           <div>
             <a class="btn btn-outline-dark btn-lg" href="/campgrounds/<%= campground._id %>/comments/new" %>/reviews/new">
                             Write a New Comment</a>
@@ -244,7 +247,7 @@ mapboxgl.accessToken = 'pk.eyJ1IjoieWxkMTk5NiIsImEiOiJjanhtaDF6bnMwM3N6M25saXlke
 var map = new mapboxgl.Map({
   container: 'map',
   style: 'mapbox://styles/mapbox/light-v10',
-  center: campground.coordinates,
+  center: campground.geometry.coordinates,
   zoom: 3
 });
 
@@ -259,7 +262,7 @@ var map = new mapboxgl.Map({
 
 //make marker to our location and add it to our map
   new mapboxgl.Marker(el)
-  .setLngLat(campground.coordinates)
+  .setLngLat(campground.geometry.coordinates)
   .setPopup(new mapboxgl.Popup({ offset: 25 }) // add popups
   .setHTML('<h3>' + campground.name + '</h3><p>' + campground.location + '</p>'))
   .addTo(map);

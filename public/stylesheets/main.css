@@ -1,5 +1,5 @@
 body {
-  /* background-color: #f16f6f; */
+   /*background-color: #66BFBF; */
 }
 
 .delete-form {
@@ -26,4 +26,17 @@ body {
 }
 .card {
 	margin-bottom: 20px;
+}
+
+#carousel-part {
+  color: #fff;
+  height: 50%;
+  background-color: #66BFBF;
+}
+
+
+.testimonial-img {
+  width: 30%;
+  border-radius: 100%;
+  margin: 20px;
 }

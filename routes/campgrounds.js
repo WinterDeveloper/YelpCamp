@@ -4,7 +4,7 @@ var Campground = require("../models/campground");
 var Review = require("../models/review");
 var middleware = require("../middleware/index");
 const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
-const geocodingClient = mbxGeocoding({ accessToken: process.env.MY_ACCESS_TOKEN });
+const geocodingClient = mbxGeocoding({ accessToken: process.env.MAPBOX_TOKEN });
 var multer = require('multer');
 var storage = multer.diskStorage({
   filename: function(req, file, callback) {
@@ -43,30 +43,13 @@ router.get("/campgrounds", function(req, res) {
         }
     }); 
   } else {
-      // Campground.find(function(err, allCampgrounds) {
-      // if(err) {
-      //   console.log(err);
-      // } else {
-      //   res.render("campgrounds/index", {campgrounds: allCampgrounds, currentUser: req.user, noMatch: noMatch});
-      // }
-    // });
-            Campground.paginate({}, {
-              page: req.query.page || 1,
-              limit: 9,
-            }, function(err, result) {
-              res.render("campgrounds/index", {campgrounds: result, currentUser: req.user, noMatch: noMatch});
-              console.log(result);
-  // result.docs
-  // result.totalDocs = 100
-  // result.limit = 10
-  // result.page = 1
-  // result.totalPages = 10    
-  // result.hasNextPage = true
-  // result.nextPage = 2
-  // result.hasPrevPage = false
-  // result.prevPage = null
-  // result.pagingCounter = 1
-            });
+    Campground.paginate({}, {
+      page: req.query.page || 1,
+      limit: 9,
+      sort: {_id: -1}
+    }, function(err, result) {
+      res.render("campgrounds/index", {mapBoxToken: process.env.MAPBOX_TOKEN, campgrounds: result, currentUser: req.user, noMatch: noMatch});
+    });
   }
   
 });
@@ -86,15 +69,15 @@ router.post("/campgrounds", middleware.isLoggedIn, upload.array('image', 9), asy
         public_id: image.public_id
       });
     }
-    var newCampground = req.body.campground;
+    var newCampground = new Campground(req.body.campground);
     newCampground.author = author;
     let response = await geocodingClient.forwardGeocode({
       query: req.body.campground.location,
       limit: 1
     })
     .send();
-    newCampground.coordinates = response.body.features[0].geometry.coordinates;
-    // Create a new campground and save to DB
+    newCampground.geometry = response.body.features[0].geometry;
+    newCampground.properties.description = `<strong><a href="/campgrounds/${newCampground._id}">${req.body.campground.name}</a></strong><p>${newCampground.location}</p><p>${newCampground.description.substring(0, 20)}...</p>`;
     try {
       await Campground.create(newCampground);
       res.redirect("/campgrounds");
@@ -110,7 +93,12 @@ router.get("/campgrounds/new", middleware.isLoggedIn, function(req, res) {
 
 router.get("/campgrounds/:id", function (req, res) {
     //find the campground with provided ID
-    Campground.findById(req.params.id).populate("comments").populate({
+    Campground.findById(req.params.id)
+    .populate({
+        path: "comments",
+        options: {sort: {createdAt: -1}}
+    })
+    .populate({
         path: "reviews",
         options: {sort: {createdAt: -1}}
     }).exec(function (err, foundCampground) {
@@ -170,9 +158,10 @@ router.put("/campgrounds/:id", middleware.checkCampgroundOwnership, upload.array
                 limit: 1
               })
               .send();
-              campground.coordinates = response.body.features[0].geometry.coordinates;
+              campground.geometry = response.body.features[0].geometry;
+              campground.location = req.body.campground.location;
             }
-            campground.location = req.body.campground.location;
+            campground.properties.description = `<strong><a href="/campgrounds/${campground._id}">${req.body.campground.name}</a></strong><p>${campground.location}</p><p>${campground.description.substring(0, 20)}...</p>`;
             campground.save();
             req.flash("success","Successfully Updated!");
             res.redirect("/campgrounds/" + campground._id);

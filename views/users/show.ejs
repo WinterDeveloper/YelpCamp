@@ -78,11 +78,11 @@
 <h2 style="text-align: center;"><%= user.username %> 's campgrounds</h2>
 
 
-<div class="row">
+<div class="row text-center">
   <% campgrounds.forEach(function(campground) { %>
     <div class="col-md-4 col-sm-6">
       <div class="card h-100">
-        <img class="img-fluid card-img-top" src="<%= campground.image %>">
+        <img class="img-fluid card-img-top" src="<%= campground.images[0].url %>">
         <div class="card-body">
           <h4 class="card-title"><%= campground.name %></h4>
           <p>

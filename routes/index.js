@@ -5,7 +5,13 @@ var User = require("../models/user");
 var Campground = require("../models/campground");
 
 router.get("/", function(req, res) {
-  res.render("landing", {currentUser: req.user, currentUser: req.user});
+  Campground.find({}, function(err, allCampgrounds) {
+    if(err) {
+      console.log(err);
+    } else {
+      res.render("landing", {currentUser: req.user, campgrounds: allCampgrounds});
+    }
+  });
 });
 
 //===========
