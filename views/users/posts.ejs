@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>YelpCamp</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/stylesheets/profile.css">
+    <link rel="stylesheet" href="/stylesheets/main.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  </head>
+  <body>
+<section id="title">
+  <div class="container">
+    <nav class="navbar navbar-expand-lg navbar-light">
+
+        <a class="navbar-brand" href="/">YelpCamp</a>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"> 
+           <span class="navbar-toggler-icon"></span>
+       </button>
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+
+          <ul class="navbar-nav ml-auto">
+            <% if(!currentUser) { %>
+              <li class="nav-item">
+                <a class="nav-link" href="/login">Login</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/register">Signup</a>
+              </li>
+            <%} else {%>
+              <li class="nav-item">
+                <a class="nav-link" href="/users/<%=currentUser._id%>"><%=currentUser.username%>'s profile</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/logout">Log Out</a>
+              </li>
+            <%}%>
+          </ul>
+
+        </div>
+
+    </nav>
+
+
+    </div>
+
+    <div class="container">
+      <% if(error && error.length > 0) { %>
+        <div class="alert alert-danger" role="alert">
+          <%= error %>
+        </div>
+      <% } %>
+      <% if(success && success.length > 0){%>
+        <div class="alert alert-success" role="alert">
+          <%= success %>
+        </div>
+      <% } %>
+    </div>
+
+
+
+
+
+
+
+
+<div class="container">
+	<div class="row">
+		<div class="col col-3">
+			<img src="<%=user.avatar.secure_url%>" style="width: 80%;clip-path: circle();margin-top: 0;" class="profile-img">
+		</div>
+		<div class="col col-9">
+			<h4 style="margin: 20px auto;">All Posts
+				<%if(currentUser) {%>
+					<%if(currentUser._id.equals(user._id)) {%>
+						<a href="/campgrounds/new" style="color: #000;"><i class="fas fa-plus-circle"></i></a>
+					<%}%>
+				<%}%>
+			</h4>
+			<h6 style="color: #99a2aa"><em>created by: <%=user.username %></em></h6>
+			<h6 style="color: #99a2aa;margin: 20px auto;"><em>Total: <%= user.saves.length %></em></h6>
+		</div>
+	</div>
+	<hr style="margin-top: 30px;">
+</div>
+
+<div class="container">
+	<div class="row">
+		<% posts.forEach(function(post) { %>
+			<div class="col-md-3 col-sm-6">
+      			<div class="card mb-4" style="text-align: center;">
+        			<img class="img-fluid card-img-top save" src="<%= post.images[0].url %>">
+        			<div class="card-body">
+          			<h5 class="card-title"><a href="/campgrounds/<%= post._id %>" style="color: #000"><%= post.name %></a></h5>
+          			<% if (post.rating === 0) { %>
+              			<em>No reviews yet.</em>
+          			<% } else { %>
+              			<span class="stars-active" style="width:0%">
+                		<% var active = 0; %>
+                		<% var inactive = 0; %>
+                		<% if(post.rating > 0 && post.rating <= 1) { %>
+                  		<% active = 1; %>
+                  		<% inactive = 4; %>
+                		<% } else if(post.rating > 1 && post.rating <= 2) { %>
+                  		<% active = 2; %>
+                  		<% inactive = 3; %>
+                		<% } else if(post.rating > 2 && post.rating <= 3) { %>
+                  		<% active = 3; %>
+                  		<% inactive = 2; %>
+                		<% } else if(post.rating > 3 && post.rating <= 4) { %>
+                  		<% active = 4; %>
+                  		<% inactive = 1; %>
+                		<% } else { %>
+                  		<% active = 5; %>
+                  		<% inactive = 0; %>
+                		<% } %>
+                		<% for(var i = 0;i < active;i++) { %>
+                  			<i class="fa fa-star stars" aria-hidden="true"></i>
+                		<% } %>
+              			</span>
+              			<span class="stars-inactive" style="width:0%">
+                		<% for(var i = 0;i < inactive;i++) { %>
+                  			<i class="fa fa-star-o stars" aria-hidden="true"></i>
+                		<% } %>
+              			</span>
+          			<% } %>
+        		</div>
+      		</div>
+    	</div>
+		<% }); %>
+	</div>
+</div>
+
+<div class="container">
+  <nav aria-label="Page navigation example">
+  	<ul class="pagination justify-content-center">
+    	<% if(campgrounds.length > 0) { %>
+      		<% if(page - 1) { %>
+      			<li class="page-item">
+        		<a class="page-link" href="/users/<%=user._id%>/posts?page=<%= page - 1 %>" aria-label="Previous">
+          		<span aria-hidden="true">&laquo;</span>
+        		</a>
+      			</li>
+      		<% } %>
+      	<% for(let i = 1;i <= totalPage;i++) { %>
+        	<li class="page-item"><a class="page-link" href="/users/<%=user._id%>/posts?page=<%= i %>"><%= i %></a></li>
+      	<% } %>
+      	<% if(page < totalPage) { %>
+      		<li class="page-item">
+        	<a class="page-link" href="/users/<%=user._id%>/posts?page=<%= page + 1 %>" aria-label="Next">
+          	<span aria-hidden="true">&raquo;</span>
+        	</a>
+      		</li>
+      	<% } %>
+    <% } %>   
+  </ul>  
+</nav>
+</div>
+
+
+<script type="text/javascript">
+  var anchor1 = document.querySelector(".profile-img");
+  var astyle1 = window.getComputedStyle(anchor1);
+  anchor1.style.height = astyle1.width;
+  var anchor2 = document.querySelectorAll(".save");
+  for (var i = 0; i < anchor2.length; i++) {
+  	var astyle2 = window.getComputedStyle(anchor2[i]);
+  	anchor2[i].style.height = astyle2.width;
+  }
+</script>
+
+<%- include("../partials/footer") -%>

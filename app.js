@@ -65,7 +65,7 @@ passport.use(new GoogleStrategy({
 ));
 
 
-mongoose.connect("mongodb://localhost:27017/yelp_campDB-mapbox", { useNewUrlParser: true });
+mongoose.connect("mongodb+srv://admin-siyu:Zsyayh1996@cluster0-9bknb.mongodb.net/postDB", { useNewUrlParser: true });
 
 
 app.use(bodyParser.urlencoded({extended: true}));
@@ -86,6 +86,6 @@ app.use(indexRoutes);
 app.use(reviewRoutes);
 
 
-app.listen(3000, function() {
+app.listen(process.env.PORT || 3000, function() {
   console.log("YelpCamp Has Started");
 });

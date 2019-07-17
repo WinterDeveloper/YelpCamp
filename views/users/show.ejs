@@ -4,7 +4,9 @@
     <meta charset="utf-8">
     <title>YelpCamp</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/stylesheets/profile.css">
+    <script src="https://kit.fontawesome.com/e1b3800b4b.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script
   </head>
@@ -30,7 +32,7 @@
               </li>
             <%} else {%>
               <li class="nav-item">
-                <a class="nav-link" href="/users/<%=currentUser._id%>">Hello! <%=currentUser.username%></a>
+                <a class="nav-link" href="/users/<%=currentUser._id%>"><%=currentUser.username%>'s profile</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="/logout">Log Out</a>
@@ -43,7 +45,7 @@
     </nav>
 
 
-    </nav>
+    </div>
 
     <div class="container">
       <% if(error && error.length > 0) { %>
@@ -59,26 +61,107 @@
     </div>
 
 
-<div class="container">
-  <div class="card mb-3 profile-parent" style="max-width: 540px;">
-  <div class="row no-gutters profile-body">
-    <div class="col-md-4">
-      <img src="<%= user.avatar%>" class="card-img" alt="user profile image" style="clip-path: circle();">
-    </div>
-    <div class="col-md-8">
-      <div class="card-body">
-        <h5 class="card-title"><%= user.firstName + " " + user.lastName %></h5>
-        <p class="card-text">This is a wider card with supporting text below as a natural     lead-in to additional content. This content is a little bit longer.</p>
-        <a href="mailto: <%= user.email %>"><%= user.email %></a>
+<section id="profile-part">
+  <div class="container">
+    <div class="row">
+      <div class="col col-md-2">
+        <div class="list-group">
+          <a href="#" class="list-group-item list-group-item-action disabled" tabindex="-1" aria-disabled="true" style="color: #fff;background-color: grey;">Personal Settings</a>
+          <a href="#profile-part" class="list-group-item list-group-item-action">Your Profile</a>
+          <a href="/users/<%=user._id%>/posts" class="list-group-item list-group-item-action">Your posts</a>
+          <a href="/users/<%=user._id%>/savings" class="list-group-item list-group-item-action">Your savings</a>
+        </div>
+      </div>
+      <div class="col col-md-10">
+        <h3>public profile</h3>
+        <hr style="margin-top: 15px;">
+        <div class="row">
+          <div class="col col-md-9">
+            <form id="edit-form" action="/users/<%= user._id%>?_method=PUT" method="POST" enctype="multipart/form-data">
+              <div class="form-group">
+                <label for="username"><h5>username</h5></label>
+                <input id="username" class="form-control" type="text" name="username" value="<%= user.username%>" style="width: 95%;" disabled>
+              </div>
+              <div class="form-group">
+                <label for="email"><h5>email</h5></label>
+                <input id="email" class="form-control" type="email" name="email" value="<%= user.email %>" style="width: 95%;" disabled>
+              </div>
+              <div class="form-group">
+                <label for="bio"><h5>Bio</h5></label>
+                <!-- <input id="bio" class="form-control" type="text" name="bio" value="<%= user.bio%>" style="width: 95%;" disabled> -->
+                <textarea id="bio" class="form-control" name="bio" style="width: 95%;" disabled form="edit-form"><%= user.bio %></textarea>
+              </div>
+              <div class="form-group">
+                <label for="avatar"><h5>Avatar:</h5></label>
+                <small>(this will delete existing avatar)</small>
+                <input type="file" id="avatar" name="avatar">
+              </div>
+              <div class="form-group">
+                <label for="current-password"><h5>Current Password</h5></label>
+                <input id="current-password" class="form-control" type="password" name="currentPassword" style="width: 95%;" disabled placeholder="current password(is required for update your profile)" required="true">
+              </div>
+              <div class="form-group">
+                <label for="new-password"><h5>New Password</h5></label>
+                <input id="new-password" class="form-control" type="password" name="newPassword" style="width: 95%;" disabled placeholder="new password">
+              </div>
+              <div class="form-group">
+                <label for="password-confirmation"><h5>Password Confirmation</h5></label>
+                <input id="password-confirmation" class="form-control" type="password" name="passwordConfirmation" style="width: 95%;" disabled placeholder="password confirmation">
+              </div>
+              <div class="form-group">
+                <button class="btn btn-success" type="submit" name="button">Edit Profile</button>
+              </div>
+            </form>
+          </div>
+          <div class="col col-md-3">
+            <h5>Profile Picture</h5>
+            <img class="profile-img" src="<%= user.avatar.secure_url%>" style="width: 100%;">
+          </div>
+        </div>
       </div>
     </div>
   </div>
-</div>
+</section>
 
-<h2 style="text-align: center;"><%= user.username %> 's campgrounds</h2>
+<!-- <div class="container-fluid">
+  <div class="card mb-3 profile-parent" style="max-width: 540px;">
+  <div class="row no-gutters profile-body">
+    <div class="col-md-4">
+      <img src="<%= user.avatar.secure_url%>" class="card-img" alt="user profile image" style="clip-path: circle();">
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h5 class="card-title"><%= user.username %></h5>
+        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+        <a href="mailto: <%= user.email %>"><%= user.email %></a>
+        <% if(currentUser) { %>
+          <% if(currentUser._id.equals(user._id)) { %>
+            <a href="/users/<%= user._id %>/edit" style="margin-left: 4%;">edit profile</a>
+          <% } %>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</div> -->
 
 
+<!-- <h2 style="text-align: center; margin: 30px auto;"><%= user.username %> 's campgrounds 
+  <% if(currentUser && currentUser._id.equals(user._id)) { %>
+  <a href="/campgrounds/new"><i class=" fas fa-plus-circle"></i></a>
+  <%}%>
+  </h2> -->
+<!-- <section id="posts-part">
+<div class="container">
 <div class="row text-center">
+  <div class="col col-md-2"></div>
+  <div class="col col-md-10">
+   <% if(campgrounds.length == 0) { %>
+    <h3 style="text-align: center;">No post yet!
+      <% if(currentUser && currentUser._id.equals(user._id)) { %>
+        <a href="/campgrounds/new"><i class=" fas fa-plus-circle"></i></a>
+      <%}%>
+    </h3>
+   <% } else {%>
   <% campgrounds.forEach(function(campground) { %>
     <div class="col-md-4 col-sm-6">
       <div class="card h-100">
@@ -92,6 +175,110 @@
       </div>
     </div>
   <% }); %>
+<% } %>
+  </div>
 </div>
+</div>
+</section> -->
+
+<!-- <hr style="margin-top: 30px;">
+
+<h2 style="text-align: center; margin: 30px auto;"><%= user.username %> 's saves</h2> -->
+<!-- <section id="savings-part">
+  <div class="container">
+  <div class="row text-center">
+    <div class="col col-md-2">
+    </div>
+    <div class="col col-md-10">
+      <hr style="margin-top: 30px;">
+      <div class="row" style="margin-bottom: 10px;">
+        <div class="col col-md-6">
+          <h5 style="color: grey;float: left;">My savings (total:<%= user.saves.length %>)</h5>
+        </div>
+        <div class="col col-md-6">       
+          <h5 style="color: grey;float: right;"><i class="fas fa-arrow-circle-right">
+            <a href="/users/<%=user._id%>/savings" style="color: grey;">more</a>
+          </i></h5>
+        </div>
+      </div>
+    <% if(user.saves.length == 0) { %>
+      <h3 style="text-align: center;">No save yet!</h3>
+   <% } else { %>
+  <% user.saves.forEach(function(save) { %>
+    <div class="col-md-4 col-sm-6">
+      <div class="card h-100">
+        <img class="img-fluid card-img-top" src="<%= save.images[0].url %>">
+        <div class="card-body">
+          <h4 class="card-title"><%= save.name %></h4>
+          <p>
+            <a href="/campgrounds/<%= save._id %>" class="btn btn-outline-dark">More Info</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  <% }); %>
+  <% } %>
+</div>
+</div>
+</div>
+</section> -->
+
+<script type="text/javascript">
+  var anchor = document.querySelector(".profile-img");
+  var astyle = window.getComputedStyle(anchor);
+  anchor.style.height = astyle.width;
+</script>
+
+<script type="text/javascript">
+  var username = document.getElementById('username');
+  var email = document.getElementById('email');
+  var bio = document.getElementById('bio');
+  var currentPassword = document.getElementById('current-password');
+  var newPassword = document.getElementById('new-password');
+  var passwordConfirmation = document.getElementById('password-confirmation');
+  <%if(currentUser) {%>
+    <%if(currentUser._id.equals(user._id)) {%>
+      username.removeAttribute("disabled");
+      email.removeAttribute("disabled");
+      bio.removeAttribute("disabled");
+      currentPassword.removeAttribute("disabled");
+      newPassword.removeAttribute("disabled");
+      passwordConfirmation.removeAttribute("disabled");
+    <%}%>
+  <%}%>
+</script>
+
+<script type="text/javascript">
+  let newPasswordValue;
+  let confirmationValue;
+  const form = document.querySelector('form');
+  const newPassword = document.getElementById('new-password');
+  const confirmation = document.getElementById('password-confirmation');
+  const validationMessage = document.getElementById('validation-message');
+  function validatePasswords(message, add, remove) {
+    validationMessage.textContent = message;
+    validationMessage.classList.add(add);
+    validationMessage.classList.remove(remove);
+  }
+  confirmation.addEventListener('input', function(e) {
+    e.preventDefault();
+    newPasswordValue = newPassword.value;
+    confirmationValue = confirmation.value;
+    if(newPasswordValue !== confirmationValue) {
+      validatePasswords('Passwords must match!', 'color-red', 'color-green');
+    } else {
+      validatePasswords('Passwords match!', 'color-green', 'color-red');
+    }
+  });
+  form.addEventListener('submit', function(e) {
+    if(newPasswordValue !== confirmationValue) {
+      e.preventDefault();
+      const error = document.getElementById('error');
+      if(!error) {
+
+      }
+    }
+  });
+</script>
 
 <%- include("../partials/footer") -%>

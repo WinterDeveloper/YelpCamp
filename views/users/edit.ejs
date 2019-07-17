@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>YelpCamp</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+    <link rel="stylesheet" href="/stylesheets/profile.css">
+    <link rel="stylesheet" href="/stylesheets/bootstrap-social.css">
+    <link rel="stylesheet" href="/stylesheets/register.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script -->
+  </head>
+  <body>
+
+  <div class="container">
+    <nav class="navbar navbar-expand-lg navbar-light">
+
+        <a class="navbar-brand" href="/">YelpCamp</a>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02">
+           <span class="navbar-toggler-icon"></span>
+       </button>
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+
+          <ul class="navbar-nav ml-auto">
+            <% if(!currentUser) { %>
+              <li class="nav-item">
+                <a class="nav-link" href="/login">Login</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/register">Signup</a>
+              </li>
+            <%} else {%>
+              <li class="nav-item">
+                <a class="nav-link" href="/users/<%=currentUser._id%>">Hello! <%=currentUser.username%></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/logout">Log Out</a>
+              </li>
+            <%}%>
+          </ul>
+
+        </div>
+
+    </nav>
+    </div>
+
+
+    <div class="container">
+      <% if(error && error.length > 0) { %>
+        <div class="alert alert-danger" role="alert">
+          <%= error %>
+        </div>
+      <% } %>
+      <% if(success && success.length > 0){%>
+        <div class="alert alert-success" role="alert">
+          <%= success %>
+        </div>
+      <% } %>
+    </div>
+<div class="register">
+    <h1>Update your profile</h1>
+    <form action="/users/<%= user._id%>?_method=PUT" method="POST" enctype="multipart/form-data">
+  <div class="form-group">
+    <input type="text" id="username" name="username" placeholder="username" value="<%= user.username %>" class="form-control" autofocus required>
+  </div>
+  <div class="form-group">
+    <input type="password" class="form-control" id="current-password" name="currentPassword" placeholder="current password" required>
+  </div>
+  <div class="form-group">
+    <input type="password" class="form-control" id="new-password" name="newPassword" placeholder="new password">
+  </div>
+  <div class="form-group">
+    <input type="password" class="form-control" id="password-confirmation" name="passwordConfirmation" placeholder="password confirmation">
+  </div>
+  <div id="validation-message"></div>
+  <div class="form-group">
+    <input type="text" class="form-control" id="email" name="email" placeholder="email" value="<%= user.email %>">
+  </div>
+  <div class="form-group">
+    <label for="avatar">Avatar:</label>
+    <small>(this deletes existing)</small>
+    <input type="file" id="avatar" name="avatar">
+  </div>
+
+  <input class="form-control" type="submit" id="update-profile">
+</form>
+</div>
+
+<script type="text/javascript">
+  let newPasswordValue;
+let confirmationValue;
+const submitBtn = document.getElementById('update-profile');
+const newPassword = document.getElementById('new-password');
+const confirmation = document.getElementById('password-confirmation');
+const validationMessage = document.getElementById('validation-message');
+function validatePasswords(message, add, remove) {
+    validationMessage.textContent = message;
+    validationMessage.classList.add(add);
+    validationMessage.classList.remove(remove);
+}
+confirmation.addEventListener('input', e => {
+  e.preventDefault();
+  newPasswordValue = newPassword.value;
+  confirmationValue = confirmation.value;
+  if (newPasswordValue !== confirmationValue) {
+    validatePasswords('Passwords must match!', 'color-red', 'color-green');
+    submitBtn.setAttribute('disabled', true);
+  } else {
+    validatePasswords('Passwords match!', 'color-green', 'color-red');
+    submitBtn.removeAttribute('disabled');
+  }
+});
+</script>
+</body>
+</html>

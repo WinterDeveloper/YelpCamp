@@ -18,7 +18,11 @@ var reviewSchema = new mongoose.Schema({
       		ref: "User"
     	},
     	username: String,
-    	avatar: String,
+      avatar: String
+    // 	avatar: {
+    // 		secure_url: {type: String, default: "https://cdn.pixabay.com/photo/2016/04/01/11/29/avatar-1300370__480.png"},
+    // 		public_id: String
+  		// },
   	},
   	campground: {
         type: mongoose.Schema.Types.ObjectId,

@@ -2,8 +2,24 @@
 var Campground = require("../models/campground");
 var Comment = require("../models/comment");
 var Review = require("../models/review");
+var User = require("../models/user");
+var passport = require('passport');
 
 var middlewareObj = {};
+
+middlewareObj.checkIfEmailOrUsernameExists = async function(req, res, next) {
+  let userExists = await User.findOne({email: req.body.email});
+  if(userExists) {
+    req.flash("error", "This email has been registered, please change an email!");
+    return res.redirect("back");
+  }
+  let usernameExists = await User.findOne({username: req.body.username});
+  if(usernameExists) {
+    req.flash("error", "This username has been registered, please change one");
+    return res.redirect("back");
+  }
+  next();
+};
 
 middlewareObj.checkCampgroundOwnership = function(req, res, next) {
   if(req.isAuthenticated()) {//whether logged in
@@ -80,6 +96,28 @@ middlewareObj.checkReviewOwnership = function(req, res, next) {
   }
 };
 
+middlewareObj.checkProfileOwnership = function(req, res, next) {
+  if(req.isAuthenticated()) {
+    User.findById(req.params.id, function(err, foundUser) {
+      if(err) {
+        req.flash("error", err.message);
+        res.redirect("back");
+      } else {
+        if(foundUser._id.equals(req.user._id) || req.user.isAdmin) {
+          next();
+        } else {
+          req.flash("error", "You do not have permission to do that!");
+          res.redirect("back");
+        }
+      }
+    });
+  } else {
+    req.flash("error", "You need to log in to do that!!!");
+    res.redirect("/login");
+  }
+};
+
+
 middlewareObj.checkReviewExistence = function (req, res, next) {
     if (req.isAuthenticated()) {
         Campground.findById(req.params.id).populate("reviews").exec(function (err, foundCampground) {
@@ -105,7 +143,54 @@ middlewareObj.checkReviewExistence = function (req, res, next) {
     }
 };
 
+middlewareObj.isValidPassword = function(req, res, next) {
+  if(req.isAuthenticated()) {
+    User.findById(req.params.id, async function(err, foundUser) {
+      if(err) {
+        req.flash("error", "Campground not found.");
+        return res.redirect("back");
+      }
+      if(foundUser._id.equals(req.user._id) || req.user.isAdmin) {
+        const { user } = await User.authenticate()(req.user.username, req.body.currentPassword);
+        if(user) {
+          res.locals.user = user;
+          next();
+        } else {
+          req.flash("error", "Incorrect Password.");
+          return res.redirect("back");
+        }
+      } else {
+        req.flash("error", "You have no permission to do that.");
+        return res.redirect("back");
+      }
+    });
+  } else {
+    req.flash("error", "You need to login first.");
+    res.redirect("back");
+  }
+};
 
+middlewareObj.changePassword = async function(req, res, next) {
+  let newPassword = req.body.newPassword;
+  let passwordConfirmation = req.body.passwordConfirmation;
+  if(newPassword && passwordConfirmation) {
+    if(newPassword === passwordConfirmation) {
+      const { user } = res.locals;
+      // User.findById(req.params.id, async function(err, foundUser) {
+      //   await foundUser.setPassword(newPassword);
+      //   await user.save();
+      // });
+      let update = await user.setPassword(newPassword);
+      user.save();
+      next();
+    } else {
+      req.flash("error", "New passwords must match.");
+      return res.redirect("back");
+    }
+  } else {
+    next();
+  }
+};
 
 
 middlewareObj.isLoggedIn = function(req, res, next) {

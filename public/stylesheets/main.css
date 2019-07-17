@@ -31,12 +31,13 @@ body {
 #carousel-part {
   color: #fff;
   height: 50%;
-  background-color: #66BFBF;
+  background-color: #f1d4d4;
 }
 
 
 .testimonial-img {
+  clip-path: circle();
   width: 30%;
-  border-radius: 100%;
+/*  border-radius: 100%;*/
   margin: 20px;
 }

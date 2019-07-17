@@ -1,0 +1,105 @@
+<%- include("../partials/header") -%>
+
+<div class="container">
+	<div class="row">
+		<div class="col col-3">
+			<img src="<%=user.avatar.secure_url%>" style="width: 80%;clip-path: circle();margin-top: 0;" class="profile-img">
+		</div>
+		<div class="col col-9">
+			<h5 style="margin: 20px auto;">默认收藏夹</h5>
+			<h6 style="color: #99a2aa"><em>created by: <%=user.username %></em></h6>
+			<h6 style="color: #99a2aa;margin: 20px auto;"><em>Total: <%= user.saves.length %></em></h6>
+		</div>
+	</div>
+	<hr style="margin-top: 30px;">
+</div>
+
+<div class="container">
+	<div class="row">
+		<% saveArray.forEach(function(save) { %>
+			<div class="col-md-3 col-sm-6">
+      			<div class="card mb-4" style="text-align: center;">
+        			<img class="img-fluid card-img-top save" src="<%= save.images[0].url %>">
+        			<div class="card-body">
+          			<h5 class="card-title"><a href="/campgrounds/<%= save._id %>" style="color: #000"><%= save.name %></a></h5>
+          			<% if (save.rating === 0) { %>
+              			<em>No reviews yet.</em>
+          			<% } else { %>
+              			<span class="stars-active" style="width:0%">
+                		<% var active = 0; %>
+                		<% var inactive = 0; %>
+                		<% if(save.rating > 0 && save.rating <= 1) { %>
+                  		<% active = 1; %>
+                  		<% inactive = 4; %>
+                		<% } else if(save.rating > 1 && save.rating <= 2) { %>
+                  		<% active = 2; %>
+                  		<% inactive = 3; %>
+                		<% } else if(save.rating > 2 && save.rating <= 3) { %>
+                  		<% active = 3; %>
+                  		<% inactive = 2; %>
+                		<% } else if(save.rating > 3 && save.rating <= 4) { %>
+                  		<% active = 4; %>
+                  		<% inactive = 1; %>
+                		<% } else { %>
+                  		<% active = 5; %>
+                  		<% inactive = 0; %>
+                		<% } %>
+                		<% for(var i = 0;i < active;i++) { %>
+                  			<i class="fa fa-star stars" aria-hidden="true"></i>
+                		<% } %>
+              			</span>
+              			<span class="stars-inactive" style="width:0%">
+                		<% for(var i = 0;i < inactive;i++) { %>
+                  			<i class="fa fa-star-o stars" aria-hidden="true"></i>
+                		<% } %>
+              			</span>
+          			<% } %>
+          			<!-- <p>
+            			<a href="/campgrounds/<%= save._id %>" class="btn btn-sm btn-outline-dark btn-moreinfo">More Info</a>
+          			</p> -->
+        		</div>
+      		</div>
+    	</div>
+		<% }); %>
+	</div>
+</div>
+
+<div class="container">
+  <nav aria-label="Page navigation example">
+  	<ul class="pagination justify-content-center">
+    	<% if(user.saves.length > 0) { %>
+      		<% if(page - 1) { %>
+      			<li class="page-item">
+        		<a class="page-link" href="/users/<%=user._id%>/savings?page=<%= page - 1 %>" aria-label="Previous">
+          		<span aria-hidden="true">&laquo;</span>
+        		</a>
+      			</li>
+      		<% } %>
+      	<% for(let i = 1;i <= totalPage;i++) { %>
+        	<li class="page-item"><a class="page-link" href="/users/<%=user._id%>/savings?page=<%= i %>"><%= i %></a></li>
+      	<% } %>
+      	<% if(page < totalPage) { %>
+      		<li class="page-item">
+        	<a class="page-link" href="/users/<%=user._id%>/savings?page=<%= page + 1 %>" aria-label="Next">
+          	<span aria-hidden="true">&raquo;</span>
+        	</a>
+      		</li>
+      	<% } %>
+    <% } %>   
+  </ul>  
+</nav>
+</div>
+
+
+<script type="text/javascript">
+  var anchor1 = document.querySelector(".profile-img");
+  var astyle1 = window.getComputedStyle(anchor1);
+  anchor1.style.height = astyle1.width;
+  var anchor2 = document.querySelectorAll(".save");
+  for (var i = 0; i < anchor2.length; i++) {
+  	var astyle2 = window.getComputedStyle(anchor2[i]);
+  	anchor2[i].style.height = astyle2.width;
+  }
+</script>
+
+<%- include("../partials/footer") -%>

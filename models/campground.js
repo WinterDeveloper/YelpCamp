@@ -48,7 +48,21 @@ var campgroundSchema = new mongoose.Schema({
   rating: {
     type: Number,
     default: 0
-  }
+  },
+  saves: {
+    type: Number,
+    default: 0
+  },
+  like: {
+    type: Number,
+    default: 0
+  },
+  liking_users: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User"
+    }
+  ]
 });
 
 campgroundSchema.plugin(mongoosePaginate);

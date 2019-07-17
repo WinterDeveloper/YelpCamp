@@ -8,6 +8,7 @@
     <title>YelpCamp</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://kit.fontawesome.com/e1b3800b4b.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.js'></script>
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.css' rel='stylesheet' />
@@ -48,7 +49,7 @@
 
   </head>
   <body>
-  <div class="container">
+  <div class="container-fluid">
     <nav class="navbar navbar-expand-lg navbar-light">
 
         <a class="navbar-brand" href="/">YelpCamp</a>
@@ -69,7 +70,7 @@
               </li>
             <%} else {%>
               <li class="nav-item">
-                <a class="nav-link" href="/users/<%=currentUser._id%>">Hello! <%=currentUser.username%></a>
+                <a class="nav-link" href="/users/<%=currentUser._id%>"><%=currentUser.username%>'s profile</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="/logout">Log Out</a>
@@ -86,7 +87,7 @@
 
     </nav>
 
-    <div class="container">
+    <div class="container-fluid">
       <% if(error && error.length > 0) { %>
         <div class="alert alert-danger" role="alert">
           <%= error %>
@@ -108,16 +109,16 @@
 
 
 
-<div class="container">
+<div class="container-fluid">
   <div class="row">
     <div class="col-md-3">
       <!-- <p class="lead">YelpCamp</p> -->
-      <div class="list-group">
+      <!-- <div class="list-group">
         <li class="list-group-item active">Info 1</li>
         <li class="list-group-item">Info 2</li>
         <li class="list-group-item">Info 3</li>
-      </div>
-      <div id="map" style="margin-top: 20px;">
+      </div> -->
+      <div id="map">
         
       </div>
     </div>
@@ -143,6 +144,33 @@
               <button class="btn btn-sm btn-danger" type="submit" name="button">Delete</button>
             </form>
           <%}%>
+          <% if(!currentUser) { %>
+            <a href="/campgrounds/<%= campground._id %>/like" class="btn btn-sm btn-outline-dark"><i class="far fa-star" style="margin-right: 4px;"></i><%= campground.saves %></a>
+          <% } %>
+          <%if(currentUser){%>
+            <% var foundUserSave = currentUser.saves.some(function (save) { %>
+              <% return save._id.equals(campground._id); %>
+            <% }); %>
+            <% if(!foundUserSave) { %>
+              <a href="/campgrounds/<%= campground._id %>/save" class="btn btn-sm btn-outline-dark"><i class="far fa-star" style="margin-right: 4px;"></i><%= campground.saves %></a>
+            <% } else { %>
+              <a href="/campgrounds/<%= campground._id %>/unsave" class="btn btn-sm btn-outline-dark"><i class="fas fa-star" style="color: #EEBD01; margin-right: 4px;"></i><%= campground.saves %></a>
+            <% } %>
+          <% } %>
+
+          <!-- LIKING PART -->
+          <% if(!currentUser) { %>
+            <a href="/campgrounds/<%= campground._id %>/like" class="btn btn-sm btn-outline-dark"><i class="far fa-thumbs-up" style="margin-right: 4px;"></i><%= campground.like %></a>
+          <% } else { %>
+            <% var foundUserLike = campground.liking_users.some(function(user) { %>
+              <% return user._id.equals(currentUser._id); %>
+            <% }); %>
+            <% if(!foundUserLike) { %>
+              <a href="/campgrounds/<%= campground._id %>/like" class="btn btn-sm btn-outline-dark"><i class="far fa-thumbs-up" style="margin-right: 4px;"></i><%= campground.like %></a>
+            <% } else { %>
+              <a href="/campgrounds/<%= campground._id %>/unlike" class="btn btn-sm btn-outline-dark"><i class="fas fa-thumbs-up" style="color: #EEBD01; margin-right: 4px;"></i><%= campground.like %></a>
+            <% } %>
+          <% } %>
         </div>
 
       </div>
@@ -171,8 +199,8 @@
                     <div class="row">
                         <div class="col-md-4">
                             <%- '<span class="fa fa-star stars"></span>'.repeat(review.rating) %>
-                            <div><img style="width: 25%; clip-path: circle();" src="<%= review.author.avatar %>">Review by: <strong><a href="/users/<%= review.author.id %>"><em><%= review.author.username %></em></a></strong></div>
-                            <span style="margin-left: 25%;"><em><%= review.updatedAt.toDateString() %></em></span>
+                            <div><img style="width: 15%;margin-right: 5%;clip-path: circle();" src="<%=review.author.avatar%>"  class="customer-img">Review by: <strong><a href="/users/<%= review.author.id %>"><em><%= review.author.username %></em></a></strong></div>
+                            <span style="margin-left: 20%;"><em><%= review.updatedAt.toDateString() %></em></span>
                         </div>
                         <div class="col-md-8">
                             <p style="text-align: justify; word-wrap: break-word;">
@@ -209,13 +237,13 @@
           <% campground.comments.slice(0, 5).forEach(function(comment) {%>
             <div class="row">
               <div class="col-md-12">
-                <img style="width: 8%;clip-path: circle();" src="<%= comment.author.avatar %>">Comment by : <strong><a href="/users/<%= comment.author.id %>"><%= comment.author.username %></a></strong>
+                <img style="width: 4.5%;clip-path: circle();margin-right: 1.5%;" src="<%= comment.author.avatar %>" class="customer-img">Comment by : <strong><a href="/users/<%= comment.author.id %>"><%= comment.author.username %></a></strong>
                 <span class="float-right"><%= moment(comment.createdAt).fromNow() %></span>
-                <p style="margin-left: 8%">
+                <p style="margin-left: 6%">
                   <%= comment.text %>
                 </p>
                 <%if((currentUser && comment.author.id.equals(currentUser._id)) || (currentUser && currentUser.isAdmin)){%>
-                <a class="btn btn-sm btn-warning" href="/campgrounds/<%= campground._id %>/comments/<%=comment._id%>/edit" style="margin-left: 8%">Edit</a>
+                <a class="btn btn-sm btn-warning" href="/campgrounds/<%= campground._id %>/comments/<%=comment._id%>/edit" style="margin-left: 6%">Edit</a>
                 <form class="delete-form" action="/campgrounds/<%= campground._id %>/comments/<%=comment._id%>?_method=DELETE" method="post">
                   <input type="submit" class="btn btn-sm btn-danger" value="delete">
                 </form>
@@ -228,8 +256,7 @@
               <h4><a href="/campgrounds/<%= campground._id %>/comments"><i class="fa fa-search" aria-hidden="true"></i> See all comments</a></h4>
           </div>
           <div>
-            <a class="btn btn-outline-dark btn-lg" href="/campgrounds/<%= campground._id %>/comments/new" %>/reviews/new">
-                            Write a New Comment</a>
+            <a class="btn btn-outline-dark btn-lg" href="/campgrounds/<%= campground._id %>/comments/new" %>/reviews/new">Write a New Comment</a>
           </div>
         </div>
       </div>
@@ -237,6 +264,13 @@
   </div>
 </div>
 
+<script type="text/javascript">
+  var anchor2 = document.querySelectorAll(".customer-img");
+  for (var i = 0; i < anchor2.length; i++) {
+    var astyle2 = window.getComputedStyle(anchor2[i]);
+    anchor2[i].style.height = astyle2.width;
+  }
+</script>
 
 <script>
 

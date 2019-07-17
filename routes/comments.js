@@ -49,7 +49,7 @@ router.post("/campgrounds/:id/comments", middleware.isLoggedIn, function(req, re
           //add username and id to comments
           comment.author.id = req.user._id;
           comment.author.username = req.user.username;
-          comment.author.avatar = req.user.avatar;
+          comment.author.avatar = req.user.avatar.secure_url;
           comment.save();
           //save comment
           foundCampground.comments.push(comment);
