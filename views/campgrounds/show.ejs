@@ -88,7 +88,7 @@
    </div> 
 </section>
 
-    <div class="container-fluid">
+    <div class="container-fluid" style="font-family: 'Quicksand', sans-serif;">
       <% if(error && error.length > 0) { %>
         <div class="alert alert-danger" role="alert">
           <%= error %>
@@ -150,8 +150,8 @@
             <a href="/campgrounds/<%= campground._id %>/like" style="color:#000;margin-right: 4px;"><i class="far fa-star fa-lg" style="margin-right: 4px;"></i></a><span style="font-family: 'Quicksand', sans-serif;"><%= campground.saves %></span>
           <% } %>
           <%if(currentUser){%>
-            <% var foundUserSave = currentUser.saves.some(function (save) { %>
-              <% return save._id.equals(campground._id); %>
+            <% var foundUserSave = campground.saving_users.some(function (user) { %>
+              <% return user._id.equals(currentUser._id); %>
             <% }); %>
             <% if(!foundUserSave) { %>
               <a href="/campgrounds/<%= campground._id %>/save" style="color: #000;margin-right: 4px;"><i class="far fa-star fa-lg" style="margin-right: 4px;"></i></a><span style="font-family: 'Quicksand', sans-serif;"><%= campground.saves %></span>

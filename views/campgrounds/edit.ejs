@@ -1,11 +1,138 @@
-<%- include("../partials/header") -%>
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>NewWorld</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.3.0/mapbox-gl-geocoder.css' type='text/css' />
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.css' rel='stylesheet' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.js'></script>
+    <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.3.0/mapbox-gl-geocoder.min.js'></script>
+    <link href="https://fonts.googleapis.com/css?family=Indie+Flower|Montserrat:400,700i|Open+Sans+Condensed:300|Quicksand|Ubuntu&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/stylesheets/main.css">
+    <link rel="stylesheet" href="/stylesheets/index.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/edit.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+    </script>
+  </head>
+  <body>
+<section id="heading_part">     
+  <div class="container-fluid">
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="/" style="color: #fff;">NewWorld</a>
+         <a class="nav-link" href="/campgrounds">Home <span class="sr-only">(current)</span></a>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"> 
+           <span class="navbar-toggler-icon"></span>
+       </button>
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <form action="/campgrounds" method="GET" class="form-inline">
+                  <div class="form-group">
+                    <input type="text" name="search" placeholder="campgrounds search..." class="form-control placeholder" style="font-family: 'Quicksand', sans-serif;">
+                    <button type="submit" style="border: 0; background: none;">
+                      <i class="fas fa-search" style="color: #fff;"></i>
+                    </button>
+                  </div>
+                </form>
+            </li>
+            <% if(!currentUser) { %>
+              <li class="nav-item">
+                <a class="nav-link" href="/login" style="font-family: 'Quicksand', sans-serif;">
+                  <i class="fas fa-user" id="login-icon"></i>Login</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/register" style="font-family: 'Quicksand', sans-serif;">
+                  <i class="fas fa-user-plus" id="signup-icon"></i>Signup</a>
+              </li>
+            <%} else {%>
+              <li class="nav-item">
+                <a class="nav-link" href="/users/<%=currentUser._id%>" style="font-family: 'Quicksand', sans-serif;">Hello! <%=currentUser.username%></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/logout" style="font-family: 'Quicksand', sans-serif;">Log Out</a>
+              </li>
+            <%}%>
+          </ul>
+
+        </div>
+
+    </nav>
+
+   </div> 
+</section>
+
+    <div class="container-fluid" style="font-family: 'Quicksand', sans-serif;">
+      <% if(error && error.length > 0) { %>
+        <div class="alert alert-danger" role="alert">
+          <%= error %>
+        </div>
+      <% } %>
+      <% if(success && success.length > 0){%>
+        <div class="alert alert-success" role="alert">
+          <%= success %>
+        </div>
+      <% } %>
+    </div>
 
 
-<div class="container">
+
+
+
+
+<div class="container" style="font-family: 'Quicksand', sans-serif;margin-top: 20px;">
+  <h1 style="text-align:center;">Edit <%=campground.name %></h1>
+  <form action="/campgrounds/<%= campground._id %>?_method=PUT" method="post" enctype="multipart/form-data" id="postEditForm">
+    <div class="row" style="margin-top: 20px;">
+      <div class="col col-md-2"></div>
+        <div class="col col-md-4">
+          <div class="form-group">
+            <input class="form-control" type="text" name="campground[name]" value="<%=campground.name%>">
+          </div>
+          <div class="form-group">
+            <input class="form-control" type="number" name="campground[price]" value="<%=campground.price%>" min="0.01" step="0.01">
+          </div>
+          <div class="form-group">
+            <input class="form-control" type="text" name="campground[location]" value="<%=campground.location%>">
+          </div>
+          <div class="form-group">
+            <textarea class="form-control" name="campground[description]" method="post"><%=campground.description%></textarea>
+          </div>
+          <div class="form-group">
+            <label for="image">Image: </label>
+            <input type="file" multiple="true" id="imageUpload" name="image" accept="image/*" class="form-control">
+          </div>
+          <div class="form-group">
+            <button class="btn btn-block btn-outline-dark" type="submit" name="button">submit</button>
+          </div>
+        </div>
+        <div class="col col-md-4">
+          <div class="form-group">
+            <div class="row">
+              <% campground.images.forEach(function(image, i) { %>
+                <div class="col col-md-4" style="padding: 0;">
+                  <input type="checkbox" name="deleteImages[]" class="imageDeleteCheckbox" id="image<%=i%>" value="<%=image.public_id%>">
+                  <label for="image<%=i%>"><img src="<%= image.url %>"  style="width: 90%;"></label>
+                </div>
+              <% }); %>
+            </div>
+          </div>
+        </div>
+      <div class="col col-md-2"></div>
+    </div>
+  </form>
+</div>
+
+
+<!-- <div class="container" style="font-family: 'Quicksand', sans-serif;margin-top: 20px;">
   <h1 style="text-align:center;">Edit <%=campground.name %></h1>
   <div class="row">
 
-    <div style="width: 30%;margin:25px auto;">
+    <div style="width: 30%;margin:25px auto;" class="row">
       <form action="/campgrounds/<%= campground._id %>?_method=PUT" method="post" enctype="multipart/form-data" id="postEditForm">
         <div class="form-group">
           <input class="form-control" type="text" name="campground[name]" value="<%=campground.name%>">
@@ -25,18 +152,19 @@
             <input type="checkbox" name="deleteImages[]" class="imageDeleteCheckbox" id="image<%=i%>" value="<%=image.public_id%>">
           <% }); %>
         </div>
-        <div class="form-group">
-          <input class="form-control" type="text" name="campground[description]" value="<%=campground.description%>"> 
-          </textarea>
+        <div class="form-group"> -->
+          <!-- <input class="form-control" type="text" name="campground[description]" value="<%=campground.description%>">
+          <textarea class="form-control" name="campground[description]" method="post"><%=campground.description%></textarea>
         </div>
         <div class="form-group">
           <button class="btn btn-block btn-outline-dark" type="submit" name="button">submit</button>
         </div>
+      </div>
       </form>
       <a href="/campgrounds">Go Back</a>
     </div>
   </div>
-</div>
+</div> -->
 
 
 <script type="text/javascript">

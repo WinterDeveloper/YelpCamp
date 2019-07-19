@@ -216,6 +216,7 @@ router.get("/campgrounds/:id/save", middleware.isLoggedIn, function(req, res) {
       return res.redirect("back");
     } else {
       foundCampground.saves++;
+      foundCampground.saving_users.push(req.user);
       foundCampground.save();
       req.user.saves.push(foundCampground);
       req.user.save();
@@ -235,6 +236,12 @@ router.get("/campgrounds/:id/unsave", middleware.isLoggedIn, function(req, res) 
     }
     Campground.findById(req.params.id, function(err, foundCampground) {
       foundCampground.saves--;
+      for(var i = 0;i < foundCampground.saving_users.length;i++) {
+        if(foundCampground.saving_users[i].equals(req.user._id)) {
+          foundCampground.saving_users.remove(foundCampground.saving_users[i]);
+          foundCampground.save();
+        }
+      }
       foundCampground.save();
     });
     User.findById(req.user._id, function(err, foundUser) {
