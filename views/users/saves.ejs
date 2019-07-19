@@ -1,20 +1,20 @@
 <%- include("../partials/header") -%>
 
-<div class="container">
+<div class="container-fluid" style="font-family: 'Quicksand', sans-serif;">
 	<div class="row">
-		<div class="col col-3">
-			<img src="<%=user.avatar.secure_url%>" style="width: 80%;clip-path: circle();margin-top: 0;" class="profile-img">
+		<div class="col col-2">
+			<img src="<%=user.avatar.secure_url%>" style="width: 60%;clip-path: circle();margin-top: 0;" class="profile-img">
 		</div>
-		<div class="col col-9">
+		<div class="col col-10">
 			<h5 style="margin: 20px auto;">默认收藏夹</h5>
-			<h6 style="color: #99a2aa"><em>created by: <%=user.username %></em></h6>
-			<h6 style="color: #99a2aa;margin: 20px auto;"><em>Total: <%= user.saves.length %></em></h6>
+			<h6 style="color: #000;"><em style="font-family: 'Indie Flower', cursive;">created by: <%=user.username %></em></h6>
+			<h6 style="color: #000;margin: 20px auto;"><em>Total: <%= user.saves.length %></em></h6>
 		</div>
 	</div>
 	<hr style="margin-top: 30px;">
 </div>
 
-<div class="container">
+<div class="container-fluid" style="font-family: 'Quicksand', sans-serif;">
 	<div class="row">
 		<% saveArray.forEach(function(save) { %>
 			<div class="col-md-3 col-sm-6">
