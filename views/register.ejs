@@ -1,10 +1,10 @@
-<%- include("../partials/header") -%>
+<%- include("partials/header") -%>
 
-<div style="font-family: 'Quicksand', sans-serif;">
-
-    <h1>Sign Up With</h1>
-    <div class="register">
-
+<div style="font-family: 'Quicksand', sans-serif;margin-top: 2%;">
+  <div class="row">
+    <div class="col col-md-4"></div>
+    <div class="register col col-md-4">
+          <h1 style="text-align: center;">Sign Up With</h1>
           <form action="/register" method="post" enctype="multipart/form-data">
             <div class="form-group">
               <input class="form-control" type="text" name="username" placeholder="username">
@@ -38,7 +38,7 @@
               <button class="btn btn-block btn-outline-dark" type="submit" name="button">submit</button>
             </div>
           </form>
-          <p>Or</p>
+          <p style="text-align: center;">Or</p>
           <div class="form-group">
             <a class="btn btn-block btn-google" href="/auth/google" role="button">
               <i class="fab fa-google">
@@ -46,7 +46,8 @@
               </i>
             </a>
           </div>
+    </div>
   </div>
-  </div>
+</div>
 
-<%- include("../partials/footer") -%>
+<%- include("partials/footer") -%>
