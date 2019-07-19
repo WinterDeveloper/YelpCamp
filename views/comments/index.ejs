@@ -1,37 +1,39 @@
 <% include ../partials/header %>
 
-<div class="container">
+<div class="container-fluid" style="margin-top: 20px;">
     <div class="row">
         <div class="col-md-12">
-            <h1 style="text-align: center">Comment Page: <%= campground.name %></h1>
+            <h1 style="text-align: center;font-family: 'Quicksand', sans-serif;">Comment Page: <%= campground.name %></h1>
             <!-- <a href="/campgrounds/<%= campground._id %>">Go back to the campground page</a> -->
             <div class="thumbnail">
                 <div class="caption-full">
                     <% if (campground.comments.length === 0) { %>
                     <h5>
-                        <em>No comments yet.</em>
+                        <em style="font-family: 'Quicksand', sans-serif;">No comments yet.</em>
                     </h5>
                     <% } else { %>
                     <p>
-                        <em>(total comments: <%= campground.comments.length %>)</em>
+                        <em style="font-family: 'Quicksand', sans-serif;">(total comments: <%= campground.comments.length %>)</em>
                     </p>
-                    <p><h4>All comments for this campground:</h4></p>
+                    <p><h4 style="font-family: 'Quicksand', sans-serif;">All comments for this campground:</h4></p>
                     <hr style="margin-top: 0;">
                     <% campground.comments.forEach(function(comment){ %>
                     <div class="row">
                         <div class="col-md-3">
-                            <div>Comment by: <strong><%= comment.author.username %></strong></div>
-                            <span><em><%= moment(comment.createdAt).fromNow() %></em></span>
+                            <div style="font-family: 'Indie Flower', cursive;">Comment by: <strong><%= comment.author.username %></strong></div>
+                            <span><em style="font-family: 'Quicksand', sans-serif;"><%= moment(comment.createdAt).fromNow() %></em></span>
                         </div>
                         <div class="col-md-9">
-                            <p style="text-align: justify; word-wrap: break-word;">
+                            <p style="text-align: justify; word-wrap: break-word;font-family: 'Quicksand', sans-serif;">
                                 <%= comment.text %>
                             </p>
                             <% if(currentUser && comment.author.id.equals(currentUser._id)){ %>
-                            <a class="btn btn-sm btn-warning"
-                               href="/campgrounds/<%=campground._id %>/comments/<%=comment._id %>/edit">Edit</a>
+                            <a
+                               href="/campgrounds/<%=campground._id %>/comments/<%=comment._id %>/edit"><i class="far fa-edit" style="color: #000;"></i></a>
                             <form class="delete-form" action="/campgrounds/<%=campground._id %>/comments/<%=comment._id %>?_method=DELETE" method="POST">
-                                <input type="submit" class="btn btn-sm btn-danger" value="Delete">
+                                <button type="submit" style="border: 0; background: none;">
+                                <i class="far fa-trash-alt"></i>
+                                </button>
                             </form>
                             <% } %>
                         </div>
@@ -40,8 +42,8 @@
                     <% }); %>
                     <% } %>
                     <div>
-                        <a class="btn btn-primary" href="/campgrounds/<%= campground._id %>/comments/new">
-                            Write a New Comment</a>
+                        <a href="/campgrounds/<%= campground._id %>/comments/new">
+                            <i class="fas fa-pencil-alt" style="margin-right: 4px;color: #000;"></i><span style="font-family: 'Quicksand', sans-serif;color: #000;">Leave your Comments</span></a>
                     </div>
                     <div style="margin-top: 10px;">
                         <a class="btn btn-default" href="/campgrounds/<%= campground._id %>"><i class="fa fa-arrow-left"></i> Go back</a>

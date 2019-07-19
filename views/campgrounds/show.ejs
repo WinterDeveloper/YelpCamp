@@ -10,9 +10,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://kit.fontawesome.com/e1b3800b4b.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Indie+Flower|Montserrat:400,700i|Open+Sans+Condensed:300|Quicksand|Ubuntu&display=swap" rel="stylesheet">
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.js'></script>
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.css' rel='stylesheet' />
     <link rel="stylesheet" href="/stylesheets/main.css">
+    <link rel="stylesheet" href="/stylesheets/index.css">
     <style>
       /*body {
         margin: 0;
@@ -44,15 +46,16 @@
       }
     </style>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
 
   </head>
   <body>
+<section id="heading_part">
   <div class="container-fluid">
     <nav class="navbar navbar-expand-lg navbar-light">
 
-        <a class="navbar-brand" href="/">YelpCamp</a>
+        <a class="navbar-brand" href="/" style="color: #fff;">NewWorld</a>
          <a class="nav-link" href="/campgrounds">Home <span class="sr-only">(current)</span></a>
 
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"> 
@@ -63,17 +66,17 @@
           <ul class="navbar-nav ml-auto">
             <% if(!currentUser) { %>
               <li class="nav-item">
-                <a class="nav-link" href="/login">Login</a>
+                <a class="nav-link" href="/login" style="color: #fff;">Login</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/register">Signup</a>
+                <a class="nav-link" href="/register" style="color: #fff;">Signup</a>
               </li>
             <%} else {%>
               <li class="nav-item">
-                <a class="nav-link" href="/users/<%=currentUser._id%>"><%=currentUser.username%>'s profile</a>
+                <a class="nav-link" href="/users/<%=currentUser._id%>" style="color: #fff;"><%=currentUser.username%>'s profile</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/logout">Log Out</a>
+                <a class="nav-link" href="/logout" style="color: #fff;">Log Out</a>
               </li>
             <%}%>
           </ul>
@@ -83,9 +86,7 @@
     </nav>
 
    </div> 
-
-
-    </nav>
+</section>
 
     <div class="container-fluid">
       <% if(error && error.length > 0) { %>
@@ -108,8 +109,7 @@
 
 
 
-
-<div class="container-fluid">
+<div class="container-fluid" style="margin-top: 15px;">
   <div class="row">
     <div class="col-md-3">
       <!-- <p class="lead">YelpCamp</p> -->
@@ -134,41 +134,43 @@
       </div>
       <div class="card">
         <div class="card-body">
-          <h4 class="text-right float-right">$<%= campground.price %>/night</h4>
-          <h4 class="card-title text-left"><a href="#"><%= campground.name %></a></h4>
-          <p class="card-text"><%= campground.description %></p>
-          <p class="card-text"><em>submitted by </em><a href="/users/<%= campground.author.id %>"><em><%= campground.author.username %></em></a><em>, <%= moment(campground.createdAt).fromNow() %></em></p>
+          <p class="text-right float-right" style="color: #000;font-family: 'Quicksand', sans-serif; font-size: 20px;">$<%= campground.price %>/person</p>
+          <h4 class="card-title text-left"><a href="#" class="campground-name"><%= campground.name %></a></h4>
+          <p class="card-text" style="font-family: 'Quicksand', sans-serif;"><%= campground.description %></p>
+          <p class="card-text" style="font-family: 'Indie Flower', cursive;"><em>submitted by </em><a href="/users/<%= campground.author.id %>"><em><%= campground.author.username %></em></a><em>, <%= moment(campground.createdAt).fromNow() %></em></p>
           <%if((currentUser && campground.author.id.equals(currentUser._id)) || (currentUser && currentUser.isAdmin)){%>
-            <a class="btn btn-sm btn-warning" href="/campgrounds/<%= campground._id %>/edit">Edit</a>
+            <a href="/campgrounds/<%= campground._id %>/edit"><i class="far fa-edit fa-lg" style="color: #000;"></i></a>
             <form class="delete-form" action="/campgrounds/<%= campground._id %>?_method=DELETE" method="post">
-              <button class="btn btn-sm btn-danger" type="submit" name="button">Delete</button>
+              <button type="submit" style="border: 0; background: none;">
+                <i class="far fa-trash-alt fa-lg"></i>
+              </button>
             </form>
           <%}%>
           <% if(!currentUser) { %>
-            <a href="/campgrounds/<%= campground._id %>/like" class="btn btn-sm btn-outline-dark"><i class="far fa-star" style="margin-right: 4px;"></i><%= campground.saves %></a>
+            <a href="/campgrounds/<%= campground._id %>/like" style="color:#000;margin-right: 4px;"><i class="far fa-star fa-lg" style="margin-right: 4px;"></i></a><span style="font-family: 'Quicksand', sans-serif;"><%= campground.saves %></span>
           <% } %>
           <%if(currentUser){%>
             <% var foundUserSave = currentUser.saves.some(function (save) { %>
               <% return save._id.equals(campground._id); %>
             <% }); %>
             <% if(!foundUserSave) { %>
-              <a href="/campgrounds/<%= campground._id %>/save" class="btn btn-sm btn-outline-dark"><i class="far fa-star" style="margin-right: 4px;"></i><%= campground.saves %></a>
+              <a href="/campgrounds/<%= campground._id %>/save" style="color: #000;margin-right: 4px;"><i class="far fa-star fa-lg" style="margin-right: 4px;"></i></a><span style="font-family: 'Quicksand', sans-serif;"><%= campground.saves %></span>
             <% } else { %>
-              <a href="/campgrounds/<%= campground._id %>/unsave" class="btn btn-sm btn-outline-dark"><i class="fas fa-star" style="color: #EEBD01; margin-right: 4px;"></i><%= campground.saves %></a>
+              <a href="/campgrounds/<%= campground._id %>/unsave" style="color: #000;margin-right: 4px;"><i class="fas fa-star fa-lg" style="color: #EEBD01; margin-right: 4px;"></i></a><span style="font-family: 'Quicksand', sans-serif;"><%= campground.saves %></span>
             <% } %>
           <% } %>
 
           <!-- LIKING PART -->
           <% if(!currentUser) { %>
-            <a href="/campgrounds/<%= campground._id %>/like" class="btn btn-sm btn-outline-dark"><i class="far fa-thumbs-up" style="margin-right: 4px;"></i><%= campground.like %></a>
+            <a href="/campgrounds/<%= campground._id %>/like" style="color: #000;"><i class="far fa-thumbs-up fa-lg" style="margin-right: 4px;"></i></a><span style="font-family: 'Quicksand', sans-serif;"><%= campground.like %></span>
           <% } else { %>
             <% var foundUserLike = campground.liking_users.some(function(user) { %>
               <% return user._id.equals(currentUser._id); %>
             <% }); %>
             <% if(!foundUserLike) { %>
-              <a href="/campgrounds/<%= campground._id %>/like" class="btn btn-sm btn-outline-dark"><i class="far fa-thumbs-up" style="margin-right: 4px;"></i><%= campground.like %></a>
+              <a href="/campgrounds/<%= campground._id %>/like" style="color: #000;"><i class="far fa-thumbs-up fa-lg" style="margin-right: 4px;"></i></a><span style="font-family: 'Quicksand', sans-serif;"><%= campground.like %></span>
             <% } else { %>
-              <a href="/campgrounds/<%= campground._id %>/unlike" class="btn btn-sm btn-outline-dark"><i class="fas fa-thumbs-up" style="color: #EEBD01; margin-right: 4px;"></i><%= campground.like %></a>
+              <a href="/campgrounds/<%= campground._id %>/unlike" style="color: #000;"><i class="fas fa-thumbs-up fa-lg" style="color: #EEBD01; margin-right: 4px;"></i></a><span style="font-family: 'Quicksand', sans-serif;"><%= campground.like %></span>
             <% } %>
           <% } %>
         </div>
@@ -181,17 +183,17 @@
           <div>
           <% if (campground.rating === 0) { %>
             <h5>
-              <em>No reviews yet.</em>
+              <em style="font-family: 'Quicksand', sans-serif;">No reviews yet.</em>
             </h5>
           <% } else { %>
                     <p>
                         <%- '<span class="fa fa-star stars"></span>'.repeat(campground.rating) %>
-                        <em>(total reviews: <%= campground.reviews.length %>)</em>
+                        <em style="font-family: 'Quicksand', sans-serif;">(total reviews: <%= campground.reviews.length %>)</em>
                     </p>
-                    <p>
+                    <p style="font-family: 'Quicksand', sans-serif;">
                         Current campground rating: <strong><%= campground.rating.toFixed(2) %></strong>
                     </p>
-                    <p><h4>Latest reviews for this campground:</h4></p>
+                    <p><h4 style="font-family: 'Quicksand', sans-serif;">Latest reviews for this campground:</h4></p>
 
                     </div>
                     <hr style="margin-top: 0;">
@@ -199,18 +201,20 @@
                     <div class="row">
                         <div class="col-md-4">
                             <%- '<span class="fa fa-star stars"></span>'.repeat(review.rating) %>
-                            <div><img style="width: 15%;margin-right: 5%;clip-path: circle();" src="<%=review.author.avatar%>"  class="customer-img">Review by: <strong><a href="/users/<%= review.author.id %>"><em><%= review.author.username %></em></a></strong></div>
-                            <span style="margin-left: 20%;"><em><%= review.updatedAt.toDateString() %></em></span>
+                            <div><img style="width: 15%;margin-right: 5%;clip-path: circle();" src="<%=review.author.avatar%>"  class="customer-img"><span style="font-family: 'Indie Flower', cursive;">Review by: <strong><a href="/users/<%= review.author.id %>"><em><%= review.author.username %></em></a></strong></span></div>
+                            <span style="margin-left: 20%;"><em style="font-family: 'Quicksand', sans-serif;"><%= review.updatedAt.toDateString() %></em></span>
                         </div>
                         <div class="col-md-8">
-                            <p style="text-align: justify; word-wrap: break-word;">
+                            <p style="text-align: justify; word-wrap: break-word;font-family: 'Quicksand', sans-serif;">
                                 <%= review.text %>
                             </p>
                             <% if(currentUser && review.author.id.equals(currentUser._id)){ %>
-                            <a class="btn btn-sm btn-warning"
-                               href="/campgrounds/<%=campground._id %>/reviews/<%=review._id %>/edit">Edit</a>
+                            <a style="color: #000;"
+                               href="/campgrounds/<%=campground._id %>/reviews/<%=review._id %>/edit"><i class="far fa-edit" style="color: #000;"></i></a>
                             <form style="display: inline;" class="delete-form" action="/campgrounds/<%=campground._id %>/reviews/<%=review._id %>?_method=DELETE" method="POST">
-                                <input type="submit" class="btn btn-sm btn-danger" value="Delete">
+                                <button type="submit" style="border: 0; background: none;">
+                                  <i class="far fa-trash-alt"></i>
+                                </button>
                             </form>
                             <% } %>
                         </div>
@@ -218,12 +222,11 @@
                     <hr>
                     <% }); %>
                     <div style="margin-bottom: 10px;">
-                        <h4><a href="/campgrounds/<%= campground._id %>/reviews"><i class="fa fa-search" aria-hidden="true"></i> See all reviews</a></h4>
+                        <h4 style="font-family: 'Quicksand', sans-serif;"><a href="/campgrounds/<%= campground._id %>/reviews"><i class="fa fa-search" aria-hidden="true"></i> See all reviews</a></h4>
                     </div>
                     <% } %>
                     <div>
-                        <a class="btn btn-outline-dark btn-lg<% if (currentUser && campground.reviews.some(function (review) {return review.author.id.equals(currentUser._id)})) { %> disabled <% } %>" href="/campgrounds/<%= campground._id %>/reviews/new">
-                            Write a New Review</a>
+                        <a class="<% if (currentUser && campground.reviews.some(function (review) {return review.author.id.equals(currentUser._id)})) { %> disabled <% } %>" href="/campgrounds/<%= campground._id %>/reviews/new"><i class="fas fa-pencil-alt" style="margin-right: 4px;color: #000;"></i><span style="font-family: 'Quicksand', sans-serif;color: #000;">Leave your Review</span></a>
                     </div>
                 </div>
             </div>
@@ -231,21 +234,28 @@
       <!-- //COMMENT PART -->
       <div class="card">
         <div class="card-body">
-          <p><h4>Latest comments for this campground:</h4><em>(total comments : <%= campground.comments.length %>)</em></p>
+          <% if (campground.comments.length === 0) { %>
+            <h5>
+              <em style="font-family: 'Quicksand', sans-serif;">No comments yet.</em>
+            </h5>
+          <% } else { %>
+          <p><h4 style="font-family: 'Quicksand', sans-serif;">Latest comments for this campground:</h4><em style="font-family: 'Quicksand', sans-serif;">(total comments : <%= campground.comments.length %>)</em></p>
           <hr>
           <!-- campground.reviews.slice(0, 5).forEach(function(review) -->
           <% campground.comments.slice(0, 5).forEach(function(comment) {%>
             <div class="row">
               <div class="col-md-12">
-                <img style="width: 4.5%;clip-path: circle();margin-right: 1.5%;" src="<%= comment.author.avatar %>" class="customer-img">Comment by : <strong><a href="/users/<%= comment.author.id %>"><%= comment.author.username %></a></strong>
-                <span class="float-right"><%= moment(comment.createdAt).fromNow() %></span>
-                <p style="margin-left: 6%">
+                <img style="width: 4.5%;clip-path: circle();margin-right: 1.5%;" src="<%= comment.author.avatar %>" class="customer-img"><span style="font-family: 'Indie Flower', cursive;">Comment by : <strong><a href="/users/<%= comment.author.id %>"><%= comment.author.username %></a></strong></span>
+                <span class="float-right" style="font-family: 'Quicksand', sans-serif;"><%= moment(comment.createdAt).fromNow() %></span>
+                <p style="margin-left: 6%;font-family: 'Quicksand', sans-serif;">
                   <%= comment.text %>
                 </p>
                 <%if((currentUser && comment.author.id.equals(currentUser._id)) || (currentUser && currentUser.isAdmin)){%>
-                <a class="btn btn-sm btn-warning" href="/campgrounds/<%= campground._id %>/comments/<%=comment._id%>/edit" style="margin-left: 6%">Edit</a>
+                <a href="/campgrounds/<%= campground._id %>/comments/<%=comment._id%>/edit" style="margin-left: 6%"><i class="far fa-edit" style="color: #000;"></i></a>
                 <form class="delete-form" action="/campgrounds/<%= campground._id %>/comments/<%=comment._id%>?_method=DELETE" method="post">
-                  <input type="submit" class="btn btn-sm btn-danger" value="delete">
+                  <button type="submit" style="border: 0; background: none;">
+                    <i class="far fa-trash-alt"></i>
+                  </button>
                 </form>
                 <%}%>
               </div>
@@ -253,10 +263,11 @@
             <hr>
           <%})%>
           <div style="margin-bottom: 10px;">
-              <h4><a href="/campgrounds/<%= campground._id %>/comments"><i class="fa fa-search" aria-hidden="true"></i> See all comments</a></h4>
+              <h4><a href="/campgrounds/<%= campground._id %>/comments"><i class="fa fa-search" aria-hidden="true"></i> <span style="font-family: 'Quicksand', sans-serif;">See all comments</span></a></h4>
           </div>
+          <%}%>
           <div>
-            <a class="btn btn-outline-dark btn-lg" href="/campgrounds/<%= campground._id %>/comments/new" %>/reviews/new">Write a New Comment</a>
+            <a href="/campgrounds/<%= campground._id %>/comments/new"><i class="fas fa-pencil-alt" style="margin-right: 4px;color: #000;"></i><span style="font-family: 'Quicksand', sans-serif;color: #000;">Leave your comments</span></a>
           </div>
         </div>
       </div>

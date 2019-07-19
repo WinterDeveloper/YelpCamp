@@ -1,0 +1,70 @@
+#heading_part {
+	background-color: #8186d5;
+}
+#first_part {
+	background-color: #e3e7f1;
+}
+.navbar {
+	font-size: 1.2rem;
+}
+.navbar-brand {
+	font-family: 'Indie Flower', cursive;
+	font-size: 30px; 
+	color: #fff;
+}
+.nav-link {
+	font-family: 'Indie Flower', cursive;
+	color: #fff;
+}
+#signup-icon {
+	color: #fff;
+	margin-right: 5px;
+}
+#login-icon {
+	color: #fff;
+	margin-right: 5px;
+}
+#slogon1 {
+	padding-top: 50px;
+	font-family: 'Indie Flower', cursive;font-size: 40px;
+	font-size: 50px;
+	margin-left: 10%;
+}
+#slogon2 {
+	text-align: center;
+	font-family: 'Indie Flower', cursive;font-size: 40px;
+	/*font-family: 'Quicksand', sans-serif;*/
+	padding-top: 10px;
+	padding-bottom: 40px;
+	margin-right: 5%;
+}
+.subslogon {
+	font-family: 'Quicksand', sans-serif;
+}
+#create {
+	color: #8186d5;
+}
+
+
+/*profile-part*/
+#profile-part {
+	margin-top: 20px;
+}
+
+/*campground part*/
+.campground-name {
+	font-family: 'Quicksand', sans-serif;
+	color: #000;
+}
+.campground-price {
+	font-family: 'Quicksand', sans-serif;
+	color: red;
+	font-size: 100px;
+}
+
+
+
+
+
+
+

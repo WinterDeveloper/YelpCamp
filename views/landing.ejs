@@ -10,12 +10,15 @@
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.js'></script>
     <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.3.0/mapbox-gl-geocoder.min.js'></script>
     <link rel="stylesheet" href="/stylesheets/main.css">
+    <!-- google font -->
+    <link href="https://fonts.googleapis.com/css?family=Indie+Flower|Montserrat:400,700i|Open+Sans+Condensed:300|Quicksand|Ubuntu&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
   </head>
   <body>
     <!-- navbar section -->
-  <section style="background-color: #f1d4d4;">
+  <!-- <section style="background-color: #f1d4d4;">
   <div class="container">
     <nav class="navbar navbar-expand-lg navbar-light">
         <a class="navbar-brand" href="/" style="color: #fff;font-size: 40px;">YelpCamp</a>
@@ -43,9 +46,9 @@
         </div>
     </nav>
    </div> 
-   </section> 
+   </section>  -->
 
-   <div class="container-fluid" style="margin-left: 4%;">
+   <!-- <div class="container-fluid" style="margin-left: 4%;">
        <img src="https://res.cloudinary.com/dgneec7cf/image/upload/v1562463160/vc1t9zqqyi4pwjvvyugb.jpg" style="width: 25%; clip-path: circle();">
        <img src="https://res.cloudinary.com/dgneec7cf/image/upload/v1562464394/hodfdqcwmtpv2z3u8mqs.jpg" style="width: 15%; clip-path: circle();">
        <img src="https://res.cloudinary.com/dgneec7cf/image/upload/v1562464586/humj6twgfqnsz9hrpmkl.jpg" style="width: 25%; clip-path: circle();">
@@ -56,16 +59,45 @@
        <img src="https://res.cloudinary.com/dgneec7cf/image/upload/v1562465211/s4eujdegbhhjdnvgrsvm.jpg" style="width: 15%; clip-path: circle();">
        <img src="https://res.cloudinary.com/dgneec7cf/image/upload/v1562465205/seskcxb6adoycc4jxtng.jpg" style="width: 35%; clip-path: circle();">
        <img src="https://res.cloudinary.com/dgneec7cf/image/upload/v1562465207/wkb2vugzkm1yrhzcrt6y.jpg" style="width: 15%; clip-path: circle();">
-    </div>
+    </div> -->
 
-    <section id="home">
+    <!-- <section id="home">
         <div class="container text-center">
             <a href="/campgrounds" class="btn btn-lg" style="margin: 30px auto; background-color: #f1d4d4">View ALL sceneries</a>
         </div>
+    </section> -->
+
+    <section id="landing_part">
+      <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img src="https://images.unsplash.com/photo-1530789253388-582c481c54b0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1500&q=80" class="d-block w-100" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img src="https://images.unsplash.com/photo-1531219432768-9f540ce91ef3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80." class="d-block w-100" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1653&q=80" class="d-block w-100" alt="...">
+        </div>
+      </div>
+      <div>
+        <h1 class="caption2">
+          <div style="margin-top: 0px;font-size: 50px;">NewWorld</div>
+          <div style="padding-left: 15%;padding-top: 15%;">GO FIND OUTSIDE WORLD!</div>
+          <div id="caption_part">
+            <a href="/campgrounds">
+              <i class="fas fa-arrow-alt-circle-right fa-sm"></i>
+            </a>
+          </div>
+        </h1>
+      </div>
     </section>
 
-   <!-- MAPBOX CLUSTER PART -->
-    <div id='map'></div>
+
+
+
+   <!-- MAPBOX CLUSTER PART
+    <div id='map'></div> -->
 
     <!-- CAROUSEL PART -->
     <!-- <section id="carousel-part">
@@ -221,7 +253,10 @@ map.on('load', function() {
 });
 </script>
 
-
+<script src="https://kit.fontawesome.com/e1b3800b4b.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
 
 

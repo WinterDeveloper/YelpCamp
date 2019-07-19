@@ -9,37 +9,51 @@
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.css' rel='stylesheet' />
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.js'></script>
     <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.3.0/mapbox-gl-geocoder.min.js'></script>
+    <link href="https://fonts.googleapis.com/css?family=Indie+Flower|Montserrat:400,700i|Open+Sans+Condensed:300|Quicksand|Ubuntu&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/stylesheets/main.css">
+    <link rel="stylesheet" href="/stylesheets/index.css">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
     </script>
   </head>
   <body>
-  <div class="container">
+<section id="heading_part">     
+  <div class="container-fluid">
     <nav class="navbar navbar-expand-lg navbar-light">
-
-        <a class="navbar-brand" href="/">YelpCamp</a>
+        <a class="navbar-brand" href="/" style="color: #fff;">NewWorld</a>
          <a class="nav-link" href="/campgrounds">Home <span class="sr-only">(current)</span></a>
 
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"> 
            <span class="navbar-toggler-icon"></span>
        </button>
         <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-
           <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <form action="/campgrounds" method="GET" class="form-inline">
+                  <div class="form-group">
+                    <input type="text" name="search" placeholder="campgrounds search..." class="form-control">
+                    <button type="submit" style="border: 0; background: none;">
+                      <i class="fas fa-search" style="color: #fff;"></i>
+                    </button>
+                  </div>
+                </form>
+            </li>
             <% if(!currentUser) { %>
               <li class="nav-item">
-                <a class="nav-link" href="/login"><i class="fal fa-user-hard-hat">Login</i></a>
+                <a class="nav-link" href="/login" style="font-family: 'Quicksand', sans-serif;">
+                  <i class="fas fa-user" id="login-icon"></i>Login</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/register">Signup</a>
+                <a class="nav-link" href="/register" style="font-family: 'Quicksand', sans-serif;">
+                  <i class="fas fa-user-plus" id="signup-icon"></i>Signup</a>
               </li>
             <%} else {%>
               <li class="nav-item">
-                <a class="nav-link" href="/users/<%=currentUser._id%>">Hello! <%=currentUser.username%></a>
+                <a class="nav-link" href="/users/<%=currentUser._id%>" style="font-family: 'Quicksand', sans-serif;">Hello! <%=currentUser.username%></a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/logout">Log Out</a>
+                <a class="nav-link" href="/logout" style="font-family: 'Quicksand', sans-serif;">Log Out</a>
               </li>
             <%}%>
           </ul>
@@ -49,11 +63,9 @@
     </nav>
 
    </div> 
+</section>
 
-
-    </nav>
-
-    <div class="container">
+    <div class="container-fluid">
       <% if(error && error.length > 0) { %>
         <div class="alert alert-danger" role="alert">
           <%= error %>
