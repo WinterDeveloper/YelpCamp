@@ -102,13 +102,6 @@
     </div>
 
 
-
-
-
-
-
-
-
 <div class="container-fluid" style="margin-top: 15px;">
   <div class="row">
     <div class="col-md-3">
@@ -146,32 +139,41 @@
               </button>
             </form>
           <%}%>
+
+          <!-- save part -->
           <% if(!currentUser) { %>
-            <a href="/campgrounds/<%= campground._id %>/like" style="color:#000;margin-right: 4px;"><i class="far fa-star fa-lg" style="margin-right: 4px;"></i></a><span style="font-family: 'Quicksand', sans-serif;"><%= campground.saves %></span>
-          <% } %>
-          <%if(currentUser){%>
-            <% var foundUserSave = campground.saving_users.some(function (user) { %>
-              <% return user._id.equals(currentUser._id); %>
-            <% }); %>
-            <% if(!foundUserSave) { %>
-              <a href="/campgrounds/<%= campground._id %>/save" style="color: #000;margin-right: 4px;"><i class="far fa-star fa-lg" style="margin-right: 4px;"></i></a><span style="font-family: 'Quicksand', sans-serif;"><%= campground.saves %></span>
-            <% } else { %>
-              <a href="/campgrounds/<%= campground._id %>/unsave" style="color: #000;margin-right: 4px;"><i class="fas fa-star fa-lg" style="color: #EEBD01; margin-right: 4px;"></i></a><span style="font-family: 'Quicksand', sans-serif;"><%= campground.saves %></span>
-            <% } %>
+            <button class="jsSaveBtn btn btn-outline-dark">
+              <i class="far fa-star"></i>
+              <span><em>Total savings: <%= campground.saving_users.length %></em></span>
+            </button>
+          <% } else { %>
+            <button class="jsSaveBtn btn btn-outline-dark">
+              <% if(foundUserSave) {%>
+                <i class="far fa-star" style="background-color: gold;"></i>
+                <span><em>Total savings: <%= campground.saving_users.length %></em></span>
+              <% } else {%>
+                <i class="far fa-star"></i>
+                <span><em>Total likings: <%= campground.saving_users.length %></em></span>
+              <% } %>
+            </button>
           <% } %>
 
           <!-- LIKING PART -->
           <% if(!currentUser) { %>
-            <a href="/campgrounds/<%= campground._id %>/like" style="color: #000;"><i class="far fa-thumbs-up fa-lg" style="margin-right: 4px;"></i></a><span style="font-family: 'Quicksand', sans-serif;"><%= campground.like %></span>
+            <button class="jsLikeBtn btn btn-outline-dark">
+              <i class="far fa-thumbs-up"></i>
+              <span><em>Total likings: <%= campground.liking_users.length %></em></span>
+            </button>
           <% } else { %>
-            <% var foundUserLike = campground.liking_users.some(function(user) { %>
-              <% return user._id.equals(currentUser._id); %>
-            <% }); %>
-            <% if(!foundUserLike) { %>
-              <a href="/campgrounds/<%= campground._id %>/like" style="color: #000;"><i class="far fa-thumbs-up fa-lg" style="margin-right: 4px;"></i></a><span style="font-family: 'Quicksand', sans-serif;"><%= campground.like %></span>
-            <% } else { %>
-              <a href="/campgrounds/<%= campground._id %>/unlike" style="color: #000;"><i class="fas fa-thumbs-up fa-lg" style="color: #EEBD01; margin-right: 4px;"></i></a><span style="font-family: 'Quicksand', sans-serif;"><%= campground.like %></span>
-            <% } %>
+            <button class="jsLikeBtn btn btn-outline-dark">
+              <% if(foundUserLike) {%>
+                <i class="far fa-thumbs-up" style="background-color: gold;"></i>
+                <span><em>Total likings: <%= campground.liking_users.length %></em></span>
+              <% } else {%>
+                <i class="far fa-thumbs-up"></i>
+                <span><em>Total likings: <%= campground.liking_users.length %></em></span>
+              <% } %>
+            </button>
           <% } %>
         </div>
 
@@ -312,6 +314,75 @@ var map = new mapboxgl.Map({
   .setHTML('<h3>' + campground.name + '</h3><p>' + campground.location + '</p>'))
   .addTo(map);
 // });
+
+</script>
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+
+
+<script type="text/javascript">
+
+  function add_save(current_elem, campground_id) {
+    $.ajax({
+      cache: false,
+      type: "POST",
+      url: "/campgrounds/:id/save",
+      data: {
+        "campground_id": campground_id, 
+      },
+      dataType: 'json',
+      success: function(data) {
+        if(data.status == "fail") {
+          if(data.msg == "user is not loggedin") {
+            window.location.href="/login";
+          } 
+        }else {     
+          // current_elem.html('<i class="fas fa-star">'+data.msg+'</i>');
+          if(data.msg == "收藏") {
+            current_elem.html('<i class="far fa-star"></i><span><em>Total savings: '+data.num+'</em></span>');
+          } else {
+            current_elem.html('<i class="far fa-star" style="background-color: gold;"></i><span><em>Total savings: '+data.num+'</em></span>');
+          }
+        }
+      }
+    });
+  }
+  function add_like(current_elem, campground_id) {
+    $.ajax({
+      cache: false,
+      type: "POST",
+      url: "/campgrounds/:id/like",
+      data: {
+        "campground_id": campground_id, 
+      },
+      dataType: 'json',
+      success: function(data) {
+        if(data.status == "fail") {
+          if(data.msg == "user is not loggedin") {
+            window.location.href="/login";
+          } 
+        }else {     
+          // current_elem.html('<i class="fas fa-star">'+data.msg+'</i>');
+          if(data.msg == "喜欢") {
+            current_elem.html('<i class="far fa-thumbs-up"></i><span><em>Total likings: '+data.num+'</em></span>');
+          } else {
+            current_elem.html('<i class="far fa-thumbs-up" style="background-color: gold;"></i><span><em>Total likings: '+data.num+'</em></span>');
+          }
+        }
+      }
+    });
+  }
+
+  $(document).ready(function() {
+    $('.jsSaveBtn').on('click', function() {
+      add_save($(this), "<%= campground._id %>");
+    });
+  });
+  $(document).ready(function() {
+    $('.jsLikeBtn').on('click', function() {
+      add_like($(this), "<%= campground._id %>");
+    });
+  });
 
 </script>
 
