@@ -3,7 +3,7 @@ var passportLocalMongoose = require("passport-local-mongoose");
 var findOrCreate = require("mongoose-findorcreate");
 
 var UserSchema = new mongoose.Schema({
-  username: String,
+  username: String, 
   password: String,
   googleId: String,
   // avatar: String,
@@ -14,7 +14,8 @@ var UserSchema = new mongoose.Schema({
   },
   firstName: String,
   lastName: String,
-  email: String,
+  // email: String,
+  email: {type: String, unique: true, required: true},
   bio: String,
   isAdmin: {type: Boolean, default: false},
   saves: [
@@ -22,7 +23,9 @@ var UserSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: "Campground"
  	}
-  ]
+  ],
+  resetPasswordToken: String,
+  resetPasswordExpires: Date,
 });
 
 UserSchema.plugin(passportLocalMongoose);

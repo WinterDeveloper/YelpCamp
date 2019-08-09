@@ -2,7 +2,7 @@
 var mongoose = require("mongoose");
 const mongoosePaginate = require('mongoose-paginate-v2');
 var Comment = require("./comment");
-var Review = require("./review");
+var Review = require("./review"); 
 
 var campgroundSchema = new mongoose.Schema({
   name: String,
@@ -68,7 +68,11 @@ var campgroundSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: "User"
     }
-  ]
+  ],
+  click_nums: {
+    type: Number,
+    default: 0
+  }
 });
 
 campgroundSchema.plugin(mongoosePaginate);

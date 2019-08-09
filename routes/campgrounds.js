@@ -30,6 +30,7 @@ cloudinary.config({
 
 
 router.get("/campgrounds", function(req, res) {
+  console.log(req.body);
   var noMatch = '';
   if(req.query.search) {
     const regex = new RegExp(escapeRegex(req.query.search), 'gi');
@@ -47,10 +48,19 @@ router.get("/campgrounds", function(req, res) {
           res.render("campgrounds/index", { campgrounds: allCampgrounds, noMatch: noMatch});
         }
     }); 
+  } else if(req.query.sort == "click_nums") {
+    Campground.paginate({}, {
+      page: req.query.page || 1,
+      limit: 2,
+      // sort: {_id: -1}
+      sort: {click_nums: -1}
+    }, function(err, result) {
+      res.render("campgrounds/index", {mapBoxToken: process.env.MAPBOX_TOKEN, campgrounds: result, currentUser: req.user, noMatch: noMatch});
+    });
   } else {
     Campground.paginate({}, {
       page: req.query.page || 1,
-      limit: 9,
+      limit: 2,
       sort: {_id: -1}
     }, function(err, result) {
       res.render("campgrounds/index", {mapBoxToken: process.env.MAPBOX_TOKEN, campgrounds: result, currentUser: req.user, noMatch: noMatch});
@@ -111,8 +121,7 @@ router.get("/campgrounds/:id", function (req, res) {
         if (err) {
             console.log(err);
         } else {
-            //render show template with that campground
-            // console.log(foundCampground.reviews.length);
+            foundCampground.click_nums += 1;
             if(req.user) {
               var has_like = false;
               var has_save = false;
@@ -128,6 +137,7 @@ router.get("/campgrounds/:id", function (req, res) {
                 foundUserSave: foundUserSave,
               });
             }
+            foundCampground.save();
             res.render("campgrounds/show", {campground: foundCampground});
         }
     });
@@ -223,25 +233,6 @@ router.delete("/campgrounds/:id", middleware.checkCampgroundOwnership, function(
   });
 });
 
-//CAMPGROUND SAVE ROUTE
-// router.get("/campgrounds/:id/save", middleware.isLoggedIn, function(req, res) {
-//   Campground.findById(req.params.id, function(err, foundCampground) {
-//     if(err) {
-//       req.flash("error", err.message);
-//       return res.redirect("back");
-//     } else {
-//       foundCampground.saves++;
-//       foundCampground.saving_users.push(req.user);
-//       foundCampground.save();
-//       req.user.saves.push(foundCampground);
-//       req.user.save();
-//       var path = "/campgrounds/" + req.params.id;
-//       req.flash("success", "campground saved Successfully!");
-//       res.redirect(path);
-//     }
-//   });
-// });
-
 router.post("/campgrounds/:id/save", function(req, res) {
   if(!req.isAuthenticated()) {
     return res.send(JSON.stringify({
@@ -336,73 +327,6 @@ router.post("/campgrounds/:id/like", function(req, res) {
     }));
   });
 });
-
-//CAMPGROUND UNSAVE ROUTE
-// router.get("/campgrounds/:id/unsave", middleware.isLoggedIn, function(req, res) {
-//   User.findById(req.user._id, function(err, foundUser) {
-//     if(err) {
-//       req.flash("error", err.message);
-//       return res.redirect("back");
-//     }
-//     Campground.findById(req.params.id, function(err, foundCampground) {
-//       foundCampground.saves--;
-//       for(var i = 0;i < foundCampground.saving_users.length;i++) {
-//         if(foundCampground.saving_users[i].equals(req.user._id)) {
-//           foundCampground.saving_users.remove(foundCampground.saving_users[i]);
-//           foundCampground.save();
-//         }
-//       }
-//       foundCampground.save();
-//     });
-//     User.findById(req.user._id, function(err, foundUser) {
-//       for(var i = 0;i < foundUser.saves.length;i++) {
-//         if(foundUser.saves[i].toString() === req.params.id) {
-//           foundUser.saves.remove(foundUser.saves[i]);
-//           foundUser.save();
-//           var path = "/campgrounds/" + req.params.id;
-//           req.flash("success", "campground has been removed from your saves!");
-//           return res.redirect(path);
-//         }
-//       }
-//     });
-//   });
-// });
-
-//CAMPGROUND LIKING ROUTE
-// router.get("/campgrounds/:id/like", middleware.isLoggedIn, function(req, res) {
-//   Campground.findById(req.params.id, function(err, foundCampground) {
-//     if(err) {
-//       req.flash("error", err.message);
-//       return res.redirect("back");
-//     } else {
-//       foundCampground.like++;
-//       foundCampground.liking_users.push(req.user);
-//       foundCampground.save();
-//       var path = "/campgrounds/" + req.params.id;
-//       req.flash("success", "You have liked this campground");
-//       res.redirect(path);
-//     }
-//   });
-// });
-
-// router.get("/campgrounds/:id/unlike", middleware.isLoggedIn, function(req, res) {
-//   Campground.findById(req.params.id, function(err, foundCampground) {
-//     if(err) {
-//       req.flash("error", err.message);
-//       return res.redirect("back");
-//     }
-//     foundCampground.like--;
-//     for(var i = 0;i < foundCampground.liking_users.length;i++) {
-//       if(foundCampground.liking_users[i].equals(req.user._id)) {
-//         foundCampground.liking_users.remove(foundCampground.liking_users[i]);
-//         foundCampground.save();
-//         var path = "/campgrounds/" + req.params.id;
-//         req.flash("success", "campground has been removed from your likes!");
-//         return res.redirect(path);
-//       }
-//     }
-//   });
-// });
 
 
 

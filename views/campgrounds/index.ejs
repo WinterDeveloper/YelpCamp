@@ -96,6 +96,11 @@
 
   <div class="container-fluid" style="font-family: 'Quicksand', sans-serif;">
 
+    <div class="ranking" style="background-color: #e3e7f1;padding: 10px;">
+      <span><a href="/campgrounds?sort=" style="color: #000;padding-right: 20px;">All↓</a></span>
+      <span><a href="/campgrounds?sort=click_nums" style="color: #000;">click_nums↓</a></span>
+    </div>
+
   <div class="row">
     <%campgrounds.docs.forEach(function(campground) {%>
     <div class="col-md-3 col-sm-6">

@@ -177,10 +177,6 @@ middlewareObj.changePassword = async function(req, res, next) {
   if(newPassword && passwordConfirmation) {
     if(newPassword === passwordConfirmation) {
       const { user } = res.locals;
-      // User.findById(req.params.id, async function(err, foundUser) {
-      //   await foundUser.setPassword(newPassword);
-      //   await user.save();
-      // });
       let update = await user.setPassword(newPassword);
       user.save();
       next();

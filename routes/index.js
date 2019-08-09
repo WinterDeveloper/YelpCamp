@@ -26,6 +26,10 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
+const crypto = require('crypto');
+const sgMail = require('@sendgrid/mail');
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
 router.get("/", function(req, res) {
   Campground.find({}, function(err, allCampgrounds) {
     if(err) {
@@ -243,6 +247,78 @@ router.get("/users/:id/posts", function(req, res) {
       res.render("users/posts", {user: foundUser, posts: result, page: req.query.page, totalPage: totalPage, campgrounds: campgrounds});
     });  
   });
+});
+
+router.get("/forgot-password", function(req, res) {
+  res.render("users/forgot");
+});
+
+router.put("/forgot-password", async function(req, res) {
+  const token = await crypto.randomBytes(20).toString('hex');
+  const user = await User.findOne({email: req.body.email});
+  if(!user) {
+    req.flash("error", "There is no account with that email");
+    return res.redirect("/forgot-password");
+  }
+  user.resetPasswordToken = token;
+  user.resetPasswordExpires = Date.now() + 3600000;
+  await user.save();
+
+  const msg = {
+    to: user.email,
+    from: 'New World Admin <ceciliasiyu96@gmail.com>',
+    subject: 'New World - Forget Password/Reset',
+    text: `You are receiving this because you (or someone else) have requested the reset of the password for your account.
+          Please click on the following link, or copy and paste it into your browser to complete the process:
+          http://${req.headers.host}/reset/${token}
+          If you did not request this, please ignore this email and your password will remain unchanged.`,
+  };
+  await sgMail.send(msg);
+  req.flash("success", `An email has been sent to ${user.email} with further instructions`);
+  return res.redirect("/campgrounds");
+});
+
+router.get("/reset/:token", async function(req, res) {
+  const token = req.params.token;
+  const user = await User.findOne({
+    resetPasswordToken: token,
+    resetPasswordExpires: { $gt: Date.now() }
+  });
+  if (!user) {
+    req.flash("error", "Password token is invalid or expired");
+    return res.redirect("/forgot-password");
+  }
+  res.render("users/reset", {token: token});
+});
+
+router.put("/reset/:token", async function(req, res) {
+  const token = req.params.token;
+  const user = await User.findOne({
+    resetPasswordToken: token,
+    resetPasswordExpires: { $gt: Date.now() }
+  });
+  if (!user) {
+    req.flash("error", "Password token is invalid or expired");
+    return res.redirect("/forgot-password");
+  }
+  if (req.body.password === req.body.confirm) {
+    await user.setPassword(req.body.password);
+    user.resetPasswordToken = null;
+    user.resetPasswordExpires = null;
+    await user.save();
+  } else {
+    req.flash("error", "Password does not match!");
+    return res.redirect(`/reset/${ token }`);
+  }
+  const msg = {
+    to: user.email,
+    from: 'New World Admin <ceciliasiyu96@gmail.com>',
+    subject: 'New World - Successfully reset your Password!',
+    text:  "You have Successfully updated your password!"
+  };
+  await sgMail.send(msg);
+  req.flash("success", "Successfully updated your password");
+  return res.redirect("/login");
 });
 
 
