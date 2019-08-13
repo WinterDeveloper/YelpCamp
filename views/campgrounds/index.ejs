@@ -88,25 +88,29 @@
     </div>
   </section>
 
-  <div>
-      <% if(noMatch.length !== 0) { %>
-        <h3><%= noMatch %></h3>
-      <% } %>
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col col-md-4">
+        <%- include("../partials/searchFilter") -%>
+      </div>
+      <div class="col col-md-8"><div id="map"></div></div>
+    </div>
   </div>
 
-  <div class="container-fluid" style="font-family: 'Quicksand', sans-serif;">
+
+  <!-- <div class="container-fluid" style="font-family: 'Quicksand', sans-serif;">
 
     <div class="ranking" style="background-color: #e3e7f1;padding: 10px;">
       <span><a href="/campgrounds?sort=" style="color: #000;padding-right: 20px;">All↓</a></span>
       <span><a href="/campgrounds?sort=click_nums" style="color: #000;">click_nums↓</a></span>
-    </div>
+    </div> -->
 
-  <div class="row">
+  <div class="row" style="font-family: 'Quicksand', sans-serif;">
     <%campgrounds.docs.forEach(function(campground) {%>
     <div class="col-md-3 col-sm-6">
       <div class="card mb-4" style="text-align: center;">
-        <img class="img-fluid card-img-top" src="<%= campground.images[0].url %>">
-        <!-- campground.images[0].url -->
+        <img class="img-fluid card-img-top" src="https://res.cloudinary.com/dgneec7cf/image/upload/v1565459082/oggj2aakdafahqwcppvb.jpg">
         <div class="card-body">
           <h5 class="card-title"><%= campground.name %></h5>
           <% if (campground.rating === 0) { %>
@@ -159,17 +163,20 @@
     <% if(campgrounds.totalDocs > 0) { %>
       <% if(campgrounds.page - 1) { %>
       <li class="page-item">
-        <a class="page-link" href="/campgrounds?page=<%= campgrounds.page - 1 %>" aria-label="Previous">
+     <!-- /campgrounds?search=&location=&page= -->
+        <a class="page-link" href="<%= paginateUrl %><%= campgrounds.page - 1 %>" aria-label="Prev">
           <span aria-hidden="true">&laquo;</span>
         </a>
       </li>
       <% } %>
       <% for(let i = 1;i <= campgrounds.totalPages;i++) { %>
-        <li class="page-item"><a class="page-link" href="/campgrounds?page=<%= i %>"><%= i %></a></li>
+        
+        <li class="page-item"><a class="page-link" href="<%= paginateUrl %><%= i %>"><%= i %></a></li>
       <% } %>
       <% if(campgrounds.page < campgrounds.totalPages) { %>
       <li class="page-item">
-        <a class="page-link" href="/campgrounds?page=<%= campgrounds.page + 1 %>" aria-label="Next">
+   
+        <a class="page-link" href="<%= paginateUrl %><%= campgrounds.page + 1 %>" aria-label="Next">
           <span aria-hidden="true">&raquo;</span>
         </a>
       </li>
@@ -314,5 +321,6 @@ map.on('load', function() {
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="/javascripts/campground-index.js"></script>
 
 <%- include("../partials/footer") -%>

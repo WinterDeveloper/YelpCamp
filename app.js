@@ -13,7 +13,8 @@ var Comment = require("./models/comment");
 var User = require("./models/user");
 const seed = require('./seeds');
 var GoogleStrategy = require('passport-google-oauth20').Strategy;
-seed();
+// var FacebookStrategy = require('passport-facebook').Strategy;
+// seed();
 
 
 //require routes
@@ -55,7 +56,7 @@ passport.deserializeUser(function(id, done) {
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "https://serene-badlands-23395.herokuapp.com/auth/google/campgrounds"
+    callbackURL: "/auth/google/campgrounds"
   },
   function(accessToken, refreshToken, profile, cb) {
     User.findOrCreate({ googleId: profile.id }, function (err, user) {
@@ -63,6 +64,18 @@ passport.use(new GoogleStrategy({
     });
   }
 ));
+
+// passport.use(new FacebookStrategy({
+//     clientID: process.env.FACEBOOK_APP_ID,
+//     clientSecret: process.env.FACEBOOK_APP_SECRET,
+//     callbackURL: "/auth/facebook/campgrounds"
+//   },
+//   function(accessToken, refreshToken, profile, cb) {
+//     User.findOrCreate({ facebookId: profile.id }, function (err, user) {
+//       return cb(err, user);
+//     });
+//   }
+// ));
 
 
 mongoose.connect("mongodb+srv://admin-siyu:Zsyayh1996@cluster0-9bknb.mongodb.net/postDB", { useNewUrlParser: true });

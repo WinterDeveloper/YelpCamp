@@ -4,8 +4,15 @@ var Comment = require("../models/comment");
 var Review = require("../models/review");
 var User = require("../models/user");
 var passport = require('passport');
+const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
+const geocodingClient = mbxGeocoding({ accessToken: process.env.MAPBOX_TOKEN });
 
 var middlewareObj = {};
+
+function escapeRegExp(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); 
+  //$&表示整个被匹配的字符串
+}
 
 middlewareObj.checkIfEmailOrUsernameExists = async function(req, res, next) {
   let userExists = await User.findOne({email: req.body.email});
@@ -197,5 +204,130 @@ middlewareObj.isLoggedIn = function(req, res, next) {
   req.flash("error", "You need to log in to do that!!!");
   res.redirect("/login");
 }
+
+middlewareObj.searchAndFilterCampgrounds = async function(req, res, next) {
+  const queryKeys = Object.keys(req.query);//an array
+  // {
+  //   search: 'breakfast',
+  //   location: 'california',
+  //   price: {
+  //     min: 300,
+  //     max: 900
+  //   }
+  // }
+  /* 
+    check if queryKeys array has any values in it
+    if true then we know that req.query has properties
+    which means the user:
+    a) clicked a paginate button (page number)
+    b) submitted the search/filter form
+    c) both a and b
+  */
+  if(queryKeys.length) {
+    const dbQueries = [];
+    let { search, price, avgRating, location, distance } = req.query;
+    if (search) {
+      search = new RegExp(escapeRegExp(search), 'gi');//escape strange chars
+      // create a db query object and push it into the dbQueries array
+      // now the database will know to search the name, description, and location
+      // fields, using the search regular expression
+      dbQueries.push({ $or: [
+        { name: search },
+        { description: search },
+        { location: search },
+        { author: { username: search } }
+      ]});
+    }
+    if (location) {
+      // geocode the location to extract geo-coordinates (lat, lng)
+      let coordinates;
+      try {
+        location = JSON.parse(location);//if it is an array for lng and alt
+        coordinates = location;
+      } catch(err) {
+        const response = await geocodingClient.
+        forwardGeocode({
+          query: location,
+          limit: 1
+        })
+        .send();
+        coordinates = response.body.features[0].geometry.coordinates;
+      }
+      let maxDistance = distance || 25;
+      //convert distance to meters
+      maxDistance *= 1609.34;
+      dbQueries.push({
+        geometry: {
+          $near: {
+            $geometry: {
+              type: 'Point',
+              coordinates: coordinates
+            },
+            $maxDistance: maxDistance
+          }
+        }
+      });
+    }
+    if (price) {
+      /*
+        check individual min/max values and create a db query object for each
+        then push the object into the dbQueries array
+        min will search for all post documents with price
+        greater than or equal to ($gte) the min value
+        max will search for all post documents with price
+        less than or equal to ($lte) the min value
+      */
+      if (price.min) dbQueries.push({ price: { $gte: price.min } });
+      if (price.max) dbQueries.push({ price: { $lte: price.max } });
+    }
+    if (avgRating) {
+      // create a db query object that finds any post documents where the avgRating
+      // value is included in the avgRating array (e.g., [0, 1, 2, 3, 4, 5])
+      dbQueries.push({ rating: { $in: avgRating } });
+    }
+    // pass database query to next middleware in route's middleware chain
+    // which is the postIndex method from /controllers/postsController.js
+    res.locals.dbQuery = dbQueries.length ? { $and: dbQueries } : {};
+  }
+  res.locals.query = req.query;
+  // build the paginateUrl for paginatePosts partial
+  // first remove 'page' string value from queryKeys array, if it exists
+  queryKeys.splice(queryKeys.indexOf('page'), 1);
+  const delimiter = queryKeys.length ? '&' : '?';
+  // build the paginateUrl local variable to be used in the paginatePosts.
+  res.locals.paginateUrl = req.originalUrl.replace(/(\?|\&)page=\d+/g, '') + `${delimiter}page=`;
+  // move to the next middleware (postIndex method)
+  // console.log(res.locals.paginateUrl);
+  next();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// pagination part
+
 
 module.exports = middlewareObj;

@@ -53,6 +53,17 @@ router.get('/auth/google/campgrounds',
     res.redirect('/campgrounds');
 });
 
+// router.get('/auth/facebook',
+//   passport.authenticate('facebook'));
+
+// router.get('/auth/facebook/campgrounds',
+//   passport.authenticate('facebook', { failureRedirect: '/login' }),
+//   function(req, res) {
+//     // Successful authentication, redirect home.
+//     res.redirect('/');
+//   });
+
+
 //SHOW REGISTER FORM
 router.get("/register", function(req, res) {
   res.render("register", {currentUser: req.user});
@@ -225,8 +236,9 @@ router.get("/users/:id/savings", function(req, res) {
       req.flash("error", err.message);
       return res.redirect("back");
     }
-    const result = paginate(foundUser.saves, 9, req.query.page || 1);
-    const totalPage = Math.floor(foundUser.saves.length / 9) + 1;
+    const eachPage = 9;
+    const result = paginate(foundUser.saves, eachPage, req.query.page || 1);
+    const totalPage = foundUser.saves.length % eachPage === 0? foundUser.saves.length / eachPage : Math.floor(foundUser.saves.length / eachPage) + 1;
     res.render("users/saves", {user: foundUser, saveArray: result, page: req.query.page, totalPage: totalPage});
   });
 });
@@ -242,8 +254,9 @@ router.get("/users/:id/posts", function(req, res) {
         req.flash("error", err.message);
         return res.redirect("back");
       }
-      const result = paginate(campgrounds, 9, req.query.page || 1);
-      const totalPage = Math.floor(campgrounds.length / 9) + 1;
+      const eachPage = 9;
+      const result = paginate(campgrounds, eachPage, req.query.page || 1);
+      const totalPage = campgrounds.length % eachPage === 0? campgrounds.length / eachPage : Math.floor(campgrounds.length / eachPage) + 1;
       res.render("users/posts", {user: foundUser, posts: result, page: req.query.page, totalPage: totalPage, campgrounds: campgrounds});
     });  
   });

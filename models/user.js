@@ -6,6 +6,7 @@ var UserSchema = new mongoose.Schema({
   username: String, 
   password: String,
   googleId: String,
+  facebookId: String,
   // avatar: String,
   // avatar: [{url: String, public_id: String}],
   avatar: {
@@ -16,6 +17,7 @@ var UserSchema = new mongoose.Schema({
   lastName: String,
   // email: String,
   email: {type: String, unique: true, required: true},
+  // email: {type: String, unique: true},
   bio: String,
   isAdmin: {type: Boolean, default: false},
   saves: [

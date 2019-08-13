@@ -6,7 +6,10 @@ var Review = require("./review");
 
 var campgroundSchema = new mongoose.Schema({
   name: String,
-  price: String,
+  price: {
+    type: Number,
+    default: 0
+  },
   images: [{url: String, public_id: String}],
   description: String,
   location: String,
@@ -23,13 +26,14 @@ var campgroundSchema = new mongoose.Schema({
   },
   properties: {
     description: String
-  },
+  },  
   // coordinates: Array,
   createdAt: { type: Date, default: Date.now },
   author: {
     id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User"
+      ref: "User",
+      autopopulate: true
     },
     username: String
   },
@@ -76,5 +80,7 @@ var campgroundSchema = new mongoose.Schema({
 });
 
 campgroundSchema.plugin(mongoosePaginate);
+campgroundSchema.index({ geometry: '2dsphere' });
+campgroundSchema.plugin(require('mongoose-autopopulate'));
 
 module.exports = mongoose.model("Campground", campgroundSchema);

@@ -29,44 +29,76 @@ cloudinary.config({
 });
 
 
-router.get("/campgrounds", function(req, res) {
-  console.log(req.body);
-  var noMatch = '';
-  if(req.query.search) {
-    const regex = new RegExp(escapeRegex(req.query.search), 'gi');
-    Campground.paginate({ "name": regex }, {
-      page: req.query.page || 1,
-      limit: 9,
-      sort: {_id: -1}
-    }, function(err, allCampgrounds) {
-      if(err) {
-        console.log(err);
-      } else {
-          if(allCampgrounds.length < 1) {
-            noMatch = "No matching campground is found, please try again later"
-          }
-          res.render("campgrounds/index", { campgrounds: allCampgrounds, noMatch: noMatch});
-        }
-    }); 
-  } else if(req.query.sort == "click_nums") {
-    Campground.paginate({}, {
-      page: req.query.page || 1,
-      limit: 2,
-      // sort: {_id: -1}
-      sort: {click_nums: -1}
-    }, function(err, result) {
-      res.render("campgrounds/index", {mapBoxToken: process.env.MAPBOX_TOKEN, campgrounds: result, currentUser: req.user, noMatch: noMatch});
-    });
-  } else {
-    Campground.paginate({}, {
-      page: req.query.page || 1,
-      limit: 2,
-      sort: {_id: -1}
-    }, function(err, result) {
-      res.render("campgrounds/index", {mapBoxToken: process.env.MAPBOX_TOKEN, campgrounds: result, currentUser: req.user, noMatch: noMatch});
-    });
-  }
+// router.get("/campgrounds", function(req, res) {
+//   console.log(req.body);
+//   var noMatch = '';
+//   if(req.query.search) {
+//     const regex = new RegExp(escapeRegex(req.query.search), 'gi');
+//     Campground.paginate({ "name": regex }, {
+//       page: req.query.page || 1,
+//       limit: 9,
+//       sort: {_id: -1}
+//     }, function(err, allCampgrounds) {
+//       if(err) {
+//         console.log(err);
+//       } else {
+//           if(allCampgrounds.length < 1) {
+//             noMatch = "No matching campground is found, please try again later"
+//           }
+//           res.render("campgrounds/index", { campgrounds: allCampgrounds, noMatch: noMatch});
+//         }
+//     }); 
+//   } else if(req.query.sort == "click_nums") {
+//     Campground.paginate({}, {
+//       page: req.query.page || 1,
+//       limit: 2,
+//       // sort: {_id: -1}
+//       sort: {click_nums: -1}
+//     }, function(err, result) {
+//       res.render("campgrounds/index", {mapBoxToken: process.env.MAPBOX_TOKEN, campgrounds: result, currentUser: req.user, noMatch: noMatch});
+//     });
+//   } else {
+//     Campground.paginate({}, {
+//       page: req.query.page || 1,
+//       limit: 9,
+//       sort: {_id: -1}
+//     }, function(err, result) {
+//       res.render("campgrounds/index", {mapBoxToken: process.env.MAPBOX_TOKEN, campgrounds: result, currentUser: req.user, noMatch: noMatch});
+//     });
+//   }
   
+// });
+
+// router.get("/campgrounds", middleware.searchAndFilterCampgrounds ,async function(req, res) {
+//   const { dbQuery } = res.locals;
+//   delete res.locals.dbQuery;
+//   let campgrounds = await Campground.paginate(dbQuery, {
+//     page: req.query.page || 1,
+//     limit: 36,
+//     sort: {_id: -1}
+//   });
+//   campgrounds.page = Number(campgrounds.page);
+//   if(!campgrounds.docs.length && res.locals.query) {
+//     res.locals.error = 'No result match that query!';
+//   }
+//   let title = "Campground Index";
+//   res.render("campgrounds/index", {mapBoxToken: process.env.MAPBOX_TOKEN, campgrounds: campgrounds, currentUser: req.user, title: title});
+// });
+
+router.get("/campgrounds", middleware.searchAndFilterCampgrounds ,async function(req, res) {
+  const { dbQuery } = res.locals;
+  delete res.locals.dbQuery;
+  let campgrounds = await Campground.paginate(dbQuery, {
+    page: req.query.page || 1,
+    limit: 36,
+    sort: {_id: -1}
+  }); 
+  campgrounds.page = Number(campgrounds.page);
+  if(!campgrounds.docs.length && res.locals.query) {
+    res.locals.error = 'No result match that query!';
+  }
+  let title = "Campground Index";
+  res.render("campgrounds/index", {mapBoxToken: process.env.MAPBOX_TOKEN, campgrounds: campgrounds, currentUser: req.user, title: title});
 });
 
 //CREATE - add new campground to DB
@@ -92,6 +124,7 @@ router.post("/campgrounds", middleware.isLoggedIn, upload.array('image', 9), asy
     })
     .send();
     newCampground.geometry = response.body.features[0].geometry;
+    newCampground.price = Number(req.body.campground.price);
     newCampground.properties.description = `<strong><a href="/campgrounds/${newCampground._id}">${req.body.campground.name}</a></strong><p>${newCampground.location}</p><p>${newCampground.description.substring(0, 20)}...</p>`;
     try {
       let createdCampground = await Campground.create(newCampground);
@@ -183,7 +216,7 @@ router.put("/campgrounds/:id", middleware.checkCampgroundOwnership, upload.array
             }
             campground.name = req.body.campground.name;
             campground.description = req.body.campground.description;
-            campground.price = req.body.campground.price;
+            campground.price = Number(req.body.campground.price);
             if(req.body.campground.location !== campground.location) {
               let response = await geocodingClient.forwardGeocode({
                 query: req.body.campground.location,
@@ -333,5 +366,10 @@ router.post("/campgrounds/:id/like", function(req, res) {
 function escapeRegex(text) {
     return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
 };
+
+function paginate (array, page_size, page_number) {
+  --page_number; // because pages logically start with 1, but technically with 0
+  return array.slice(page_number * page_size, (page_number + 1) * page_size);
+}
 
 module.exports = router;
