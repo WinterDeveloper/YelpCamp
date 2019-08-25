@@ -17,7 +17,6 @@ function escapeRegExp(string) {
 middlewareObj.checkIfEmailOrUsernameExists = async function(req, res, next) {
   let userExists = await User.findOne({email: req.body.email});
   if(userExists) {
-    console.log(lalala);
     req.flash("error", "This email has been registered, please change an email!");
     return res.redirect("back");
   }
