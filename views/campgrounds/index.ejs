@@ -110,7 +110,7 @@
     <%campgrounds.docs.forEach(function(campground) {%>
     <div class="col-md-3 col-sm-6">
       <div class="card mb-4" style="text-align: center;">
-        <img class="img-fluid card-img-top" src="https://res.cloudinary.com/dgneec7cf/image/upload/v1565459082/oggj2aakdafahqwcppvb.jpg">
+        <img class="img-fluid card-img-top" src="<%= campground.images[0].url %>">
         <div class="card-body">
           <h5 class="card-title"><%= campground.name %></h5>
           <% if (campground.rating === 0) { %>

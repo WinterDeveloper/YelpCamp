@@ -14,7 +14,7 @@ var User = require("./models/user");
 const seed = require('./seeds');
 var GoogleStrategy = require('passport-google-oauth20').Strategy;
 // var FacebookStrategy = require('passport-facebook').Strategy;
-seed();
+// seed();
 
 
 //require routes
